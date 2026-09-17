@@ -71,6 +71,28 @@ export default function PoolDetailPage() {
                 {copied ? <Check size={12} className="ok" /> : <Copy size={12} />}
               </button>
             </div>
+            {token.featured ? (
+              <div className="tok-links">
+                {PROTOCOL.x ? (
+                  <a href={PROTOCOL.x} target="_blank" rel="noopener noreferrer">
+                    X
+                  </a>
+                ) : null}
+                {PROTOCOL.ponsUrl ? (
+                  <a href={PROTOCOL.ponsUrl} target="_blank" rel="noopener noreferrer">
+                    Pons{PROTOCOL.ponsId ? ` ${PROTOCOL.ponsId}` : ""}
+                  </a>
+                ) : null}
+                {PROTOCOL.discord ? (
+                  <a href={PROTOCOL.discord} target="_blank" rel="noopener noreferrer">
+                    Discord
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+            {token.featured && PROTOCOL.tokenInfo ? (
+              <p className="sub" style={{ marginTop: 6 }}>{PROTOCOL.tokenInfo}</p>
+            ) : null}
           </div>
         </div>
         <div className="stat-strip">

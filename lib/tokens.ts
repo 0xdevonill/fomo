@@ -1,4 +1,6 @@
 import { fakeEvm, fakeSol } from "@/lib/format";
+import { rawLogoFor } from "@/lib/logos";
+import { contractFor, site } from "@/lib/site";
 import type { ChainId, ListKind, Quote, Stake, Token } from "@/lib/types";
 
 type Draft = {
@@ -15,13 +17,21 @@ type Draft = {
   lists: ListKind[];
 };
 
+function branded(d: Draft): Draft {
+  if (!d.featured) return d;
+  return { ...d, symbol: site.tokenSymbol, name: site.tokenName };
+}
+
 function make(chain: ChainId, d: Draft): Token {
-  const id = `${chain}-${d.symbol.toLowerCase()}`;
+  const row = branded(d);
+  const id = `${chain}-${row.symbol.toLowerCase()}`;
+  const envAddr = row.featured ? contractFor(chain) : "";
   return {
     id,
     chain,
-    ...d,
-    address: chain === "sol" ? fakeSol(id) : fakeEvm(id),
+    ...row,
+    address: envAddr || (chain === "sol" ? fakeSol(id) : fakeEvm(id)),
+    logo: rawLogoFor(row.symbol),
   };
 }
 
@@ -104,7 +114,7 @@ export const TOKENS: Token[] = [
 ];
 
 const rhStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: number }[] = [
-  { symbol: "HELIX", tvl: 5.0274, rate7d: 42.8, fees24h: 0.018 },
+  { symbol: site.tokenSymbol, tvl: 5.0274, rate7d: 42.8, fees24h: 0.018 },
   { symbol: "INU", tvl: 3.3873, rate7d: 0, fees24h: 0 },
   { symbol: "NVDA", tvl: 0.6756, rate7d: 0, fees24h: 0 },
   { symbol: "CASHCAT", tvl: 0.4915, rate7d: 163.33, fees24h: 0.22 },
@@ -120,7 +130,7 @@ const rhStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: n
 ];
 
 const solStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: number }[] = [
-  { symbol: "HELIX", tvl: 842.4, rate7d: 38.6, fees24h: 3.12 },
+  { symbol: site.tokenSymbol, tvl: 842.4, rate7d: 38.6, fees24h: 3.12 },
   { symbol: "BONK", tvl: 612.1, rate7d: 21.4, fees24h: 2.08 },
   { symbol: "JUP", tvl: 401.8, rate7d: 14.2, fees24h: 1.44 },
   { symbol: "WIF", tvl: 288.0, rate7d: 29.7, fees24h: 1.91 },
@@ -154,13 +164,18 @@ export const STAKES: Stake[] = [
 ];
 
 export const PROTOCOL = {
-  name: "Helix",
-  token: "HELIX",
-  tagline: "Liquidity stakes and concentrated liquidity pools on Robinhood Chain and Solana. Stake into pools for a proportional share of trading fees, and build shaped positions from a single coin.",
+  name: site.tokenName,
+  token: site.tokenSymbol,
+  tagline:
+    site.tokenInfo ||
+    "Liquidity stakes and concentrated liquidity pools on Robinhood Chain and Solana. Stake into pools for a proportional share of trading fees, and build shaped positions from a single coin.",
   claimFee: 0.075,
   chainIdRh: 4663,
-  x: "https://x.com/helixliquidity",
-  discord: "https://discord.gg/helixliquidity",
+  x: site.xUrl,
+  discord: site.discordUrl,
+  ponsUrl: site.ponsUrl,
+  ponsId: site.ponsId,
+  tokenInfo: site.tokenInfo,
   totals: {
     robinhood: { positions: 21441, fees: 3_201_988, tvl: 768_258, nativePrice: 2440.95, nativeLabel: "ETH Price" },
     sol: { positions: 18620, fees: 2_448_110, tvl: 1_124_400, nativePrice: 214.62, nativeLabel: "SOL Price" },

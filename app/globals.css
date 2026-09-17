@@ -660,6 +660,7 @@ a.btn {
 
 .explore-page {
   position: relative;
+  width: 100%;
 }
 
 .explore-grid {
@@ -1058,18 +1059,44 @@ a.btn {
   min-width: 0;
 }
 
-.tok-ico {
+.tok-ico img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  flex: none;
-  color: #fff;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-flex;
-  box-shadow: 0 0 0 1px var(--line-2);
+  display: block;
+}
+
+.tok-ico {
+  overflow: hidden;
+  padding: 0;
+}
+
+.btn-short {
+  display: none;
+}
+
+.tok-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tok-links a {
   font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-bright);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  text-decoration: none;
+}
+
+.tok-links a:hover {
+  border-color: var(--pine);
 }
 
 .tok-text {
@@ -1711,17 +1738,48 @@ a.btn {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
+  .topbar-inner {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .g-search {
-    display: none;
+    order: 8;
+    width: 100%;
+    max-width: none;
+    margin: 0;
   }
   .stat-strip,
   .pos-meta,
   .stake-kpis {
     grid-template-columns: 1fr 1fr;
   }
+  .mspot-hero-stats {
+    grid-template-columns: 1fr 1fr;
+    max-width: none;
+    gap: 10px 12px;
+  }
+  .mspot--hero {
+    min-height: 0;
+  }
+  .mspot--hero .mspot-sym {
+    font-size: 22px;
+  }
+  .tok-name {
+    display: none;
+  }
+  .header-stats {
+    display: none;
+  }
+  .col-desk {
+    display: none !important;
+  }
 }
 
 @media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
   .siderail {
     border-right: 0;
     border-top: 1px solid var(--line-2);
@@ -1732,7 +1790,7 @@ a.btn {
     align-items: stretch;
     inset: auto 0 0;
     top: auto;
-    overflow: auto;
+    overflow: hidden;
   }
   .siderail.open,
   .siderail:hover,
@@ -1745,10 +1803,12 @@ a.btn {
   }
   .rail-group--end {
     margin-top: 0;
-    flex: none;
+    flex: 1;
   }
-  .rail-sep {
-    display: none;
+  .rail-sep,
+  .desktop-only,
+  .rail-social {
+    display: none !important;
   }
   .rail-label {
     display: none;
@@ -1757,18 +1817,64 @@ a.btn {
     padding: 0;
     justify-content: center;
     flex: 1;
+    min-width: 0;
   }
   .app-rail-shift {
     padding-left: 0;
-    padding-bottom: 70px;
+    padding-bottom: 76px;
   }
-  .header-stats {
+  .topbar-inner,
+  .shell-main {
+    width: calc(100% - 1rem);
+  }
+  .btn-full {
     display: none;
   }
-  .topbar-inner {
-    width: calc(100% - 1.2rem);
+  .btn-short {
+    display: inline;
   }
-  .shell-main {
-    width: calc(100% - 1.2rem);
+  .col-tab,
+  .col-spark {
+    display: none !important;
+  }
+  .explore-grid .ftable,
+  .app-page .ftable {
+    table-layout: fixed;
+  }
+  .explore-grid .ftable :is(th, td):first-child {
+    width: 46%;
+  }
+  .explore-grid .ftable :is(th, td):nth-child(2),
+  .explore-grid .ftable :is(th, td):nth-child(3) {
+    width: 27%;
+  }
+  .ftable th,
+  .ftable td {
+    padding: 10px 6px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tok-sym {
+    font-size: 12px;
+  }
+  .tok-link {
+    gap: 8px;
+  }
+  .tok-ico {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .ftable tbody tr:hover td:last-child::after {
+    content: none;
+  }
+  .ap-head {
+    gap: 6px;
+  }
+  .mspot {
+    min-height: 0;
+  }
+  .page-lead h1 {
+    font-size: 28px;
   }
 }

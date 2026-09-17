@@ -22,7 +22,7 @@ const display = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Helix",
+  title: PROTOCOL.name,
   description: PROTOCOL.tagline,
   icons: { icon: "/icon.svg" },
 };

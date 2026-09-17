@@ -40,7 +40,8 @@ export function WalletButton() {
   return (
     <>
       <button type="button" className="btn" onClick={() => setOpen(true)}>
-        Connect Wallet
+        <span className="btn-full">Connect Wallet</span>
+        <span className="btn-short">Connect</span>
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="wallet-modal">

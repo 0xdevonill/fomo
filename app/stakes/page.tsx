@@ -59,9 +59,9 @@ export default function StakesPage() {
               <tr>
                 <th>Pool</th>
                 <th>TVL</th>
-                <th>7d rate</th>
-                <th>24h fees</th>
-                <th>Trend</th>
+                <th className="col-tab">7d rate</th>
+                <th className="col-desk">24h fees</th>
+                <th className="col-desk">Trend</th>
                 <th> </th>
               </tr>
             </thead>
@@ -89,7 +89,7 @@ export default function StakesPage() {
                       </span>
                     </td>
                     <td>{formatQuote(s.tvlQuote, quote)}</td>
-                    <td>
+                    <td className="col-tab">
                       {s.rate7d === null ? (
                         <span style={{ color: "var(--text-3)" }}>no fees yet</span>
                       ) : (
@@ -98,8 +98,8 @@ export default function StakesPage() {
                         </span>
                       )}
                     </td>
-                    <td>{formatQuote(s.fees24h, quote)}</td>
-                    <td>
+                    <td className="col-desk">{formatQuote(s.fees24h, quote)}</td>
+                    <td className="col-desk">
                       {s.fees24h > 0 ? (
                         <Sparkline seed={s.id} up={up} />
                       ) : (

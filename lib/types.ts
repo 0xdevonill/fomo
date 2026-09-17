@@ -21,6 +21,7 @@ export type Token = {
   featured?: boolean;
   lists: ListKind[];
   address: string;
+  logo?: string;
 };
 
 export type Stake = {

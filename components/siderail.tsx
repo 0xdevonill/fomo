@@ -52,11 +52,11 @@ export function Siderail() {
       <div className="rail-group rail-group--end">
         <div className="rail-sep" aria-hidden />
         <a
-          className="rail-item rail-social"
+          className="rail-item rail-social desktop-only"
           href={PROTOCOL.x}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Helix on X"
+          aria-label={`${PROTOCOL.name} on X`}
         >
           <span className="rail-ico">
             <svg viewBox="0 0 24 24" width="17" height="17">
@@ -69,11 +69,11 @@ export function Siderail() {
           <span className="rail-label">X</span>
         </a>
         <a
-          className="rail-item rail-social"
+          className="rail-item rail-social desktop-only"
           href={PROTOCOL.discord}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Helix on Discord"
+          aria-label={`${PROTOCOL.name} on Discord`}
         >
           <span className="rail-ico">
             <svg viewBox="0 0 24 24" width="17" height="17">

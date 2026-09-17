@@ -104,11 +104,11 @@ export function TokenTable({
                 <th>Token</th>
                 <Th label="MC" col="mc" sort={sort} onSort={toggle} />
                 <Th label={tf} col="change24h" sort={sort} onSort={toggle} />
-                <Th label={`Fees ${tf}`} col="fees24h" sort={sort} onSort={toggle} />
-                <Th label="Trades" col="trades24h" sort={sort} onSort={toggle} />
-                <Th label={`Vol ${tf}`} col="vol24h" sort={sort} onSort={toggle} />
-                <Th label="Age" col="ageHours" sort={sort} onSort={toggle} />
-                <th>Last {tf}</th>
+                <Th label={`Fees ${tf}`} col="fees24h" sort={sort} onSort={toggle} extra="col-desk" />
+                <Th label="Trades" col="trades24h" sort={sort} onSort={toggle} extra="col-desk" />
+                <Th label={`Vol ${tf}`} col="vol24h" sort={sort} onSort={toggle} extra="col-tab" />
+                <Th label="Age" col="ageHours" sort={sort} onSort={toggle} extra="col-desk" />
+                <th className="col-spark">Last {tf}</th>
               </tr>
             </thead>
             <tbody>
@@ -134,11 +134,11 @@ export function TokenTable({
                     <td>
                       <span className={`chg ${up ? "up" : "down"}`}>{formatPct(t.change24h)}</span>
                     </td>
-                    <td>{formatUsd(t.fees24h)}</td>
-                    <td>{formatInt(t.trades24h)}</td>
-                    <td className="cell-vol">{formatUsd(t.vol24h)}</td>
-                    <td className={`cell-age ${fresh ? "fresh" : ""}`}>{formatAge(t.ageHours)}</td>
-                    <td>
+                    <td className="col-desk">{formatUsd(t.fees24h)}</td>
+                    <td className="col-desk">{formatInt(t.trades24h)}</td>
+                    <td className="cell-vol col-tab">{formatUsd(t.vol24h)}</td>
+                    <td className={`cell-age col-desk ${fresh ? "fresh" : ""}`}>{formatAge(t.ageHours)}</td>
+                    <td className="col-spark">
                       <Sparkline seed={`${t.id}-${tf}`} up={up} />
                     </td>
                   </tr>
@@ -157,14 +157,16 @@ function Th({
   col,
   sort,
   onSort,
+  extra = "",
 }: {
   label: string;
   col: Col;
   sort: { col: Col; dir: "asc" | "desc" };
   onSort: (c: Col) => void;
+  extra?: string;
 }) {
   return (
-    <th className="sortable" onClick={() => onSort(col)}>
+    <th className={`sortable ${extra}`} onClick={() => onSort(col)}>
       {label}
       {sort.col === col ? <span className="glyph">{sort.dir === "desc" ? "▼" : "▲"}</span> : null}
     </th>
