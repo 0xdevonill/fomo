@@ -200,8 +200,8 @@ export function WalletButton() {
             {live
               ? "Live mode: connects to Robinhood Chain mainnet (chain id 4663). Positions and stakes in this demo stay in the browser."
               : chain === "sol"
-                ? "Solana connect is a local demo. Use the Robinhood toggle plus NEXT_PUBLIC_WALLET_API for a live EVM connection."
-                : "Demo mode until NEXT_PUBLIC_WALLET_API is set. Then Connect uses your real wallet on Robinhood Chain mainnet."}
+                ? "Solana connect is a local demo. Switch to Robinhood for a live EVM wallet connection."
+                : "Demo mode until a WalletConnect Project ID is set."}
           </p>
         </DialogContent>
       </Dialog>

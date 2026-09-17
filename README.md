@@ -33,7 +33,7 @@ Add these in Vercel → Project → Settings → Environment Variables, then **R
 | `NEXT_PUBLIC_PONS_ID` | Optional Pons id shown next to the link |
 | `NEXT_PUBLIC_LAUNCH_AT` | Optional ISO timestamp for an honest launch countdown |
 | `NEXT_PUBLIC_TOKEN_INFO` | One-line description on the token page |
-| `NEXT_PUBLIC_WALLET_API` | Reown / WalletConnect Project ID, or an `https` RPC URL. When set, Connect uses a real wallet on Robinhood Chain mainnet (4663). Empty = local demo. |
+| `NEXT_PUBLIC_WALLET_API` | Reown / WalletConnect Project ID, or an `https` RPC URL. Defaults to the wired Project ID so Connect uses a real wallet on Robinhood Chain mainnet (4663). |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | Optional alias for the WalletConnect Project ID |
 | `NEXT_PUBLIC_RH_RPC` | Optional Robinhood RPC override. Default is `https://rpc.mainnet.chain.robinhood.com` |
 | `NEXT_PUBLIC_ALCHEMY_API_KEY` | Optional Alchemy key. Builds `https://robinhood-mainnet.g.alchemy.com/v2/{key}` |
@@ -50,7 +50,7 @@ Copy `.env.example` as a starting point.
 - Toggle dark / light
 - Read Docs (full work plan) and Academy in English
 
-Set `NEXT_PUBLIC_WALLET_API` to a WalletConnect Project ID to connect MetaMask, Rabby, or WalletConnect to **Robinhood Chain mainnet**. Without that key, Connect stays a local demo. Fomo Ping never asks for a seed phrase. Mint / deposit in this UI still do not send mainnet LP transactions.
+Set `NEXT_PUBLIC_WALLET_API` to a WalletConnect Project ID to connect MetaMask, Rabby, or WalletConnect to **Robinhood Chain mainnet**. A Project ID is already wired as the default. Fomo Ping never asks for a seed phrase. Mint / deposit in this UI still do not send mainnet LP transactions.
 
 ## Stack
 

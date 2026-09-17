@@ -212,7 +212,14 @@ export function tokensFor(chain: ChainId): Token[] {
 }
 
 export function tokenById(id: string): Token | undefined {
-  return TOKENS.find((t) => t.id === id);
+  const direct = TOKENS.find((t) => t.id === id);
+  if (direct) return direct;
+  const lower = id.toLowerCase();
+  return TOKENS.find((t) => {
+    if (t.address.toLowerCase() === lower) return true;
+    if (`${t.chain}-${t.address}`.toLowerCase() === lower) return true;
+    return false;
+  });
 }
 
 export function featuredToken(chain: ChainId): Token {

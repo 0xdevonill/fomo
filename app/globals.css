@@ -353,27 +353,30 @@ body {
   background-color: var(--panel);
   background-image: var(--card-wash);
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-full);
   align-self: stretch;
   display: inline-flex;
   overflow: hidden;
   box-shadow: inset 0 1px #ffffff09;
+  padding: 3px;
+  gap: 3px;
 }
 
 .chain-switch-btn {
   cursor: pointer;
-  width: 32px;
-  min-height: 30px;
+  min-width: 52px;
+  min-height: 34px;
   border: 0;
-  border-left: 1px solid var(--line);
   color: var(--silver-3);
-  opacity: 0.5;
+  opacity: 0.62;
   background: 0 0;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  gap: 6px;
+  padding: 0 9px;
   display: flex;
   position: relative;
+  border-radius: var(--r-full);
 }
 
 .chain-switch-btn:first-child {
@@ -381,29 +384,48 @@ body {
 }
 
 .chain-switch-btn:hover {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .chain-switch-btn.on {
   opacity: 1;
-  background: color-mix(in srgb, var(--pine) 22%, transparent);
+}
+
+.chain-switch-btn.on.rh {
+  background: color-mix(in srgb, #00c805 22%, transparent);
+}
+
+.chain-switch-btn.on.sol {
+  background: color-mix(in srgb, #9945ff 24%, transparent);
 }
 
 .chain-switch-btn.on::after {
-  content: "";
-  border: 1.5px solid var(--pine);
-  border-radius: calc(var(--r-md) - 2px);
-  pointer-events: none;
-  position: absolute;
-  inset: 2px;
+  content: none;
 }
 
-.chain-switch-btn.on .rh-mark {
+.chain-lab {
+  font-family: var(--f-mono);
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.chain-switch-btn.on.rh .chain-lab {
   color: #00c805;
 }
 
-.chain-switch-btn.on .sol-mark {
-  color: #9945ff;
+.chain-switch-btn.on.sol .chain-lab {
+  color: #c084fc;
+}
+
+.chain-logo {
+  display: block;
+  flex: none;
+  border-radius: 7px;
+}
+
+.chain-switch-btn:not(.on) .chain-logo {
+  filter: grayscale(0.35) saturate(0.8);
 }
 
 .header-stats {

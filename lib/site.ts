@@ -24,11 +24,14 @@ export const site = {
 
 const RH_RPC_DEFAULT = "https://rpc.mainnet.chain.robinhood.com";
 
+const WC_PROJECT_ID = "c3a2a7e9d8f090369b0b8b2421807c9c";
+
 function walletFromEnv() {
   const raw =
     env("NEXT_PUBLIC_WALLET_API") ||
     env("NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID") ||
-    env("NEXT_PUBLIC_WALLETCONNECT_ID");
+    env("NEXT_PUBLIC_WALLETCONNECT_ID") ||
+    WC_PROJECT_ID;
   const rpcOverride = env("NEXT_PUBLIC_RH_RPC") || env("NEXT_PUBLIC_RPC_URL");
   const alchemy = env("NEXT_PUBLIC_ALCHEMY_API_KEY") || env("NEXT_PUBLIC_ALCHEMY_KEY");
   let projectId = "";
@@ -41,7 +44,7 @@ function walletFromEnv() {
   return {
     projectId,
     rpc: rpc || RH_RPC_DEFAULT,
-    live: Boolean(raw || rpcOverride || alchemy),
+    live: Boolean(projectId || rpcOverride || alchemy),
   };
 }
 
