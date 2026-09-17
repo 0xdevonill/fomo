@@ -32,6 +32,10 @@ Add these in Vercel → Project → Settings → Environment Variables, then **R
 | `NEXT_PUBLIC_PONS_URL` | Pons (or other launchpad) listing |
 | `NEXT_PUBLIC_PONS_ID` | Optional Pons id shown next to the link |
 | `NEXT_PUBLIC_TOKEN_INFO` | One-line description on the token page |
+| `NEXT_PUBLIC_WALLET_API` | Reown / WalletConnect Project ID, or an `https` RPC URL. When set, Connect uses a real wallet on Robinhood Chain mainnet (4663). Empty = local demo. |
+| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | Optional alias for the WalletConnect Project ID |
+| `NEXT_PUBLIC_RH_RPC` | Optional Robinhood RPC override. Default is `https://rpc.mainnet.chain.robinhood.com` |
+| `NEXT_PUBLIC_ALCHEMY_API_KEY` | Optional Alchemy key. Builds `https://robinhood-mainnet.g.alchemy.com/v2/{key}` |
 
 Copy `.env.example` as a starting point.
 
@@ -39,12 +43,12 @@ Copy `.env.example` as a starting point.
 
 - Switch **Robinhood / SOL** from the top bar
 - Search tokens, sort trending and established books, change 1h / 24h / 7d
-- Open a pool, pick a shape, mint a position (demo wallet — stored in this browser)
+- Open a pool, pick a shape, mint a position (LP flow is stored in this browser)
 - Deposit into a stake or attach a new one
 - Toggle dark / light
 - Read Docs and Academy in full English
 
-Wallet connect is a local demo. No seed phrase is ever requested. No mainnet transaction is sent.
+Set `NEXT_PUBLIC_WALLET_API` to a WalletConnect Project ID to connect MetaMask, Rabby, or WalletConnect to **Robinhood Chain mainnet**. Without that key, Connect stays a local demo. Helix never asks for a seed phrase. Mint / deposit in this UI still do not send mainnet LP transactions.
 
 ## Stack
 

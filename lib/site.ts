@@ -21,6 +21,31 @@ export const site = {
   ponsId: env("NEXT_PUBLIC_PONS_ID"),
 };
 
+const RH_RPC_DEFAULT = "https://rpc.mainnet.chain.robinhood.com";
+
+function walletFromEnv() {
+  const raw =
+    env("NEXT_PUBLIC_WALLET_API") ||
+    env("NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID") ||
+    env("NEXT_PUBLIC_WALLETCONNECT_ID");
+  const rpcOverride = env("NEXT_PUBLIC_RH_RPC") || env("NEXT_PUBLIC_RPC_URL");
+  const alchemy = env("NEXT_PUBLIC_ALCHEMY_API_KEY") || env("NEXT_PUBLIC_ALCHEMY_KEY");
+  let projectId = "";
+  let rpc = rpcOverride;
+  if (/^https?:\/\//i.test(raw)) rpc = rpc || raw;
+  else if (raw) projectId = raw;
+  if (!rpc && alchemy) {
+    rpc = `https://robinhood-mainnet.g.alchemy.com/v2/${alchemy}`;
+  }
+  return {
+    projectId,
+    rpc: rpc || RH_RPC_DEFAULT,
+    live: Boolean(raw || rpcOverride || alchemy),
+  };
+}
+
+export const wallet = walletFromEnv();
+
 export function isDemoContract(address: string): boolean {
   return address.trim().toLowerCase() === DEMO_TOKEN_CONTRACT.toLowerCase();
 }

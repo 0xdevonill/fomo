@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppStateProvider } from "@/lib/app-state";
 import { fetchLiveToken } from "@/lib/live-token";
 import { PROTOCOL } from "@/lib/tokens";
+import { Web3Provider } from "@/components/web3-provider";
 import "./globals.css";
 
 const sans = Inter({
@@ -37,11 +38,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${mono.variable} ${display.variable} dark h-full antialiased`}
     >
       <body className="min-h-full">
-        <AppStateProvider initialLive={live}>
-          <TooltipProvider>
-            <AppShell>{children}</AppShell>
-          </TooltipProvider>
-        </AppStateProvider>
+        <Web3Provider>
+          <AppStateProvider initialLive={live}>
+            <TooltipProvider>
+              <AppShell>{children}</AppShell>
+            </TooltipProvider>
+          </AppStateProvider>
+        </Web3Provider>
       </body>
     </html>
   );

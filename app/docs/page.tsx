@@ -102,8 +102,11 @@ export default function DocsPage() {
       </p>
       <h3>Connecting your wallet</h3>
       <p>
-        On Robinhood Chain, Helix connects through any standard EVM wallet. MetaMask and Rabby
-        cover most people; anything that supports WalletConnect works too. On Solana, use
+        On Robinhood Chain, Helix connects through any standard EVM wallet on{" "}
+        <b>Robinhood Chain mainnet (chain id 4663)</b>. MetaMask and Rabby cover
+        most people; anything that supports WalletConnect works too. Set{" "}
+        <code>NEXT_PUBLIC_WALLET_API</code> to your Reown / WalletConnect Project
+        ID (or a Robinhood RPC URL) so Connect talks to the live chain. On Solana, use
         Phantom or Solflare. Click <b>Connect Wallet</b> top right, approve the connection in
         your wallet, you are in.
       </p>

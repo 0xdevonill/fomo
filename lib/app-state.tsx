@@ -11,6 +11,7 @@ import {
 } from "react";
 import type { ChainId, LiveToken, Position, ShapeId, StakeDeposit } from "@/lib/types";
 import { fakeEvm, fakeSol } from "@/lib/format";
+import { wallet as walletEnv } from "@/lib/site";
 
 type Theme = "dark" | "light";
 
@@ -25,6 +26,7 @@ type AppState = {
   wallet: string | null;
   connect: (kind: string) => void;
   disconnect: () => void;
+  setWallet: (addr: string | null) => void;
   live: LiveToken | null;
   positions: Position[];
   stakeDeposits: StakeDeposit[];
@@ -84,7 +86,7 @@ export function AppStateProvider({
     const w = loadJson<string | null>(WALLET_KEY, null);
     setThemeState(t === "light" ? "light" : "dark");
     setChainState(c === "sol" ? "sol" : "robinhood");
-    setWallet(w);
+    if (!walletEnv.live) setWallet(w);
     setPositions(loadJson(POS_KEY, []));
     setStakeDeposits(loadJson(STAKE_KEY, []));
     setReady(true);
@@ -105,7 +107,7 @@ export function AppStateProvider({
   }, [chain, ready]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || walletEnv.live) return;
     if (wallet) localStorage.setItem(WALLET_KEY, JSON.stringify(wallet));
     else localStorage.removeItem(WALLET_KEY);
   }, [wallet, ready]);
@@ -160,6 +162,10 @@ export function AppStateProvider({
   }, [chain]);
 
   const disconnect = useCallback(() => setWallet(null), []);
+
+  const setWalletAddress = useCallback((addr: string | null) => {
+    setWallet(addr);
+  }, []);
 
   const pushToast = useCallback((title: string, body?: string) => {
     const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -232,6 +238,7 @@ export function AppStateProvider({
       wallet,
       connect,
       disconnect,
+      setWallet: setWalletAddress,
       live,
       positions,
       stakeDeposits,
@@ -251,6 +258,7 @@ export function AppStateProvider({
       wallet,
       connect,
       disconnect,
+      setWalletAddress,
       live,
       positions,
       stakeDeposits,
