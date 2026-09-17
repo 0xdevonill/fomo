@@ -190,7 +190,7 @@ export function AppStateProvider({
         createdAt: Date.now(),
       };
       setPositions((p) => [pos, ...p]);
-      pushToast("Position minted", "Held in your Helix contract. Only your wallet can move it.");
+      pushToast("Position minted", "Held in your Ping contract. Only your wallet can move it.");
     },
     [chain, pushToast]
   );

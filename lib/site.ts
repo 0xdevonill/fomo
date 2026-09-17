@@ -6,7 +6,7 @@ function env(name: string, fallback = ""): string {
 export const DEMO_TOKEN_CONTRACT =
   "0x1Ad69dDD9D98dD71b6211339A1801fD128A3925D";
 
-export const BRAND_LOGO = "/logo.jpg";
+export const BRAND_LOGO = "/logo.png";
 
 export const site = {
   tokenSymbol: env("NEXT_PUBLIC_TOKEN_SYMBOL"),
@@ -15,10 +15,11 @@ export const site = {
   tokenContractSol: env("NEXT_PUBLIC_TOKEN_CONTRACT_SOL"),
   tokenLogo: env("NEXT_PUBLIC_TOKEN_LOGO"),
   tokenInfo: env("NEXT_PUBLIC_TOKEN_INFO"),
-  xUrl: env("NEXT_PUBLIC_X_URL", "https://x.com/helixliquidity"),
-  discordUrl: env("NEXT_PUBLIC_DISCORD_URL", "https://discord.gg/helixliquidity"),
+  xUrl: env("NEXT_PUBLIC_X_URL", "https://x.com/fomoping"),
+  discordUrl: env("NEXT_PUBLIC_DISCORD_URL", "https://discord.gg/fomoping"),
   ponsUrl: env("NEXT_PUBLIC_PONS_URL"),
   ponsId: env("NEXT_PUBLIC_PONS_ID"),
+  launchAt: env("NEXT_PUBLIC_LAUNCH_AT"),
 };
 
 const RH_RPC_DEFAULT = "https://rpc.mainnet.chain.robinhood.com";
@@ -52,7 +53,7 @@ export function isDemoContract(address: string): boolean {
 
 export function isSiteToken(symbol: string): boolean {
   const s = symbol.toUpperCase();
-  if (s === "HELIX") return true;
+  if (s === "PING" || s === "HELIX") return true;
   if (site.tokenSymbol && s === site.tokenSymbol.toUpperCase()) return true;
   return false;
 }

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   CircleDollarSign,
   Coins,
@@ -26,6 +26,10 @@ export function Topbar() {
   const totals = PROTOCOL.totals[chain];
   const [q, setQ] = useState("");
   const router = useRouter();
+  const path = usePathname();
+  const landing = path === "/";
+  const buyHref = PROTOCOL.ponsUrl || "/pools";
+  const buyExternal = Boolean(PROTOCOL.ponsUrl);
   const hits = useMemo(() => {
     const query = q.trim().toLowerCase();
     if (!query) return [];
@@ -42,104 +46,110 @@ export function Topbar() {
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <Link className="brand" href="/pools" aria-label="Helix home">
+        <Link className="brand" href="/" aria-label={`${PROTOCOL.name} home`}>
           <Logo />
         </Link>
-        <div className="g-search">
-          <Search size={14} />
-          <input
-            placeholder="SEARCH TOKENS & STAKES"
-            aria-label="Search tokens and stakes"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && hits[0]) {
-                router.push(`/pools/${hits[0].id}`);
-                setQ("");
-              }
-              if (e.key === "Escape") setQ("");
-            }}
-          />
-          {q.trim() ? (
-            <div className="tok-search-drop">
-              {hits.length === 0 ? (
-                <div className="tok-search-note">No tokens match “{q.trim()}”.</div>
-              ) : (
-                hits.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    className="tok-search-hit"
-                    onClick={() => {
-                      router.push(`/pools/${t.id}`);
-                      setQ("");
-                    }}
-                  >
-                    <TokenIcon symbol={t.symbol} logo={t.logo} size={18} />
-                    <span className="tok-sym">{t.symbol}</span>
-                    <span className="tok-name">{t.name}</span>
-                    <span className="tok-addr">{shortAddr(t.address)}</span>
-                  </button>
-                ))
-              )}
-            </div>
-          ) : null}
-        </div>
-        <div className="topbar-actions">
-          <nav className="chain-switch" aria-label="Chain">
-            <button
-              type="button"
-              className={`chain-switch-btn ${chain === "robinhood" ? "on" : ""}`}
-              title="Robinhood Chain"
-              aria-label="Show Robinhood Chain pools"
-              aria-pressed={chain === "robinhood"}
-              onClick={() => setChain("robinhood")}
-            >
-              <RhMark />
-            </button>
-            <button
-              type="button"
-              className={`chain-switch-btn ${chain === "sol" ? "on" : ""}`}
-              title="Solana"
-              aria-label="Show Solana pools"
-              aria-pressed={chain === "sol"}
-              onClick={() => setChain("sol")}
-            >
-              <SolMark />
-            </button>
-          </nav>
-          <div className="header-stats" aria-label="Helix Pools totals">
-            <span className="hstat">
-              <Layers className="hstat-ico" size={13} strokeWidth={2.1} />
-              <span className="hstat-body">
-                <span className="hstat-label">Total Positions</span>
-                <span className="hstat-value">{totals.positions.toLocaleString("en-US")}</span>
-              </span>
-            </span>
-            <span className="hstat">
-              <Coins className="hstat-ico" size={13} strokeWidth={2.1} />
-              <span className="hstat-body">
-                <span className="hstat-label">Total Fees</span>
-                <span className="hstat-value">{formatUsd(totals.fees, 0)}</span>
-              </span>
-            </span>
-            <span className="hstat hstat-wide">
-              <Droplet className="hstat-ico" size={13} strokeWidth={2.1} />
-              <span className="hstat-body">
-                <span className="hstat-label">TVL</span>
-                <span className="hstat-value">{formatUsd(totals.tvl, 0)}</span>
-              </span>
-            </span>
-            <span className="hstat hstat-wide">
-              <CircleDollarSign className="hstat-ico" size={13} strokeWidth={2.1} />
-              <span className="hstat-body">
-                <span className="hstat-label">{totals.nativeLabel}</span>
-                <span className="hstat-value">
-                  ${totals.nativePrice.toLocaleString("en-US", { maximumFractionDigits: 2 })}
-                </span>
-              </span>
-            </span>
+        {landing ? null : (
+          <div className="g-search">
+            <Search size={14} />
+            <input
+              placeholder="SEARCH TOKENS & STAKES"
+              aria-label="Search tokens and stakes"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && hits[0]) {
+                  router.push(`/pools/${hits[0].id}`);
+                  setQ("");
+                }
+                if (e.key === "Escape") setQ("");
+              }}
+            />
+            {q.trim() ? (
+              <div className="tok-search-drop">
+                {hits.length === 0 ? (
+                  <div className="tok-search-note">No tokens match “{q.trim()}”.</div>
+                ) : (
+                  hits.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      className="tok-search-hit"
+                      onClick={() => {
+                        router.push(`/pools/${t.id}`);
+                        setQ("");
+                      }}
+                    >
+                      <TokenIcon symbol={t.symbol} logo={t.logo} size={18} />
+                      <span className="tok-sym">{t.symbol}</span>
+                      <span className="tok-name">{t.name}</span>
+                      <span className="tok-addr">{shortAddr(t.address)}</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            ) : null}
           </div>
+        )}
+        <div className="topbar-actions">
+          {landing ? null : (
+            <>
+              <nav className="chain-switch" aria-label="Chain">
+                <button
+                  type="button"
+                  className={`chain-switch-btn ${chain === "robinhood" ? "on" : ""}`}
+                  title="Robinhood Chain"
+                  aria-label="Show Robinhood Chain pools"
+                  aria-pressed={chain === "robinhood"}
+                  onClick={() => setChain("robinhood")}
+                >
+                  <RhMark />
+                </button>
+                <button
+                  type="button"
+                  className={`chain-switch-btn ${chain === "sol" ? "on" : ""}`}
+                  title="Solana"
+                  aria-label="Show Solana pools"
+                  aria-pressed={chain === "sol"}
+                  onClick={() => setChain("sol")}
+                >
+                  <SolMark />
+                </button>
+              </nav>
+              <div className="header-stats" aria-label={`${PROTOCOL.name} pool totals`}>
+                <span className="hstat">
+                  <Layers className="hstat-ico" size={13} strokeWidth={2.1} />
+                  <span className="hstat-body">
+                    <span className="hstat-label">Total Positions</span>
+                    <span className="hstat-value">{totals.positions.toLocaleString("en-US")}</span>
+                  </span>
+                </span>
+                <span className="hstat">
+                  <Coins className="hstat-ico" size={13} strokeWidth={2.1} />
+                  <span className="hstat-body">
+                    <span className="hstat-label">Total Fees</span>
+                    <span className="hstat-value">{formatUsd(totals.fees, 0)}</span>
+                  </span>
+                </span>
+                <span className="hstat hstat-wide">
+                  <Droplet className="hstat-ico" size={13} strokeWidth={2.1} />
+                  <span className="hstat-body">
+                    <span className="hstat-label">TVL</span>
+                    <span className="hstat-value">{formatUsd(totals.tvl, 0)}</span>
+                  </span>
+                </span>
+                <span className="hstat hstat-wide">
+                  <CircleDollarSign className="hstat-ico" size={13} strokeWidth={2.1} />
+                  <span className="hstat-body">
+                    <span className="hstat-label">{totals.nativeLabel}</span>
+                    <span className="hstat-value">
+                      ${totals.nativePrice.toLocaleString("en-US", { maximumFractionDigits: 2 })}
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </>
+          )}
           <button
             type="button"
             className="theme-toggle"
@@ -149,6 +159,17 @@ export function Topbar() {
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
+          {buyExternal ? (
+            <a className="btn btn-ping btn-sm" href={buyHref} target="_blank" rel="noopener noreferrer">
+              <span className="btn-full">Buy ${PROTOCOL.token}</span>
+              <span className="btn-short">Buy</span>
+            </a>
+          ) : (
+            <Link className="btn btn-ping btn-sm" href={landing ? "/pools" : "/"}>
+              <span className="btn-full">{landing ? "Enter app" : `$${PROTOCOL.token}`}</span>
+              <span className="btn-short">{landing ? "App" : `$${PROTOCOL.token}`}</span>
+            </Link>
+          )}
           <WalletButton />
         </div>
       </div>

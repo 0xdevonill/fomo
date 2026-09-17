@@ -126,7 +126,7 @@ export default function PoolDetailPage() {
           </div>
           <p style={{ margin: 0, color: "var(--text-2)", fontSize: 14, lineHeight: 1.6 }}>
             {token.symbol}/{quote} · {token.quote} quote · age {formatAge(token.ageHours)} ·{" "}
-            {formatInt(token.trades24h)} trades in 24h. Helix finds every fee tier and defaults
+            {formatInt(token.trades24h)} trades in 24h. Fomo Ping finds every fee tier and defaults
             to the deepest book. A 7.5% cut is taken only when you claim fees, never from principal.
           </p>
         </div>
@@ -136,7 +136,7 @@ export default function PoolDetailPage() {
           <h3>Provide liquidity</h3>
         </div>
         <p style={{ margin: 0, color: "var(--text-2)", fontSize: 13.5, lineHeight: 1.55 }}>
-          Build a shaped position from a single coin. Helix mints the position NFT into a
+          Build a shaped position from a single coin. Fomo Ping mints the position NFT into a
           contract only your wallet controls.
         </p>
         <div className="field">
