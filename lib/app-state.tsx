@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { ChainId, Position, ShapeId, StakeDeposit } from "@/lib/types";
+import type { ChainId, LiveToken, Position, ShapeId, StakeDeposit } from "@/lib/types";
 import { fakeEvm, fakeSol } from "@/lib/format";
 
 type Theme = "dark" | "light";
@@ -25,6 +25,7 @@ type AppState = {
   wallet: string | null;
   connect: (kind: string) => void;
   disconnect: () => void;
+  live: LiveToken | null;
   positions: Position[];
   stakeDeposits: StakeDeposit[];
   addPosition: (input: {
@@ -59,11 +60,18 @@ function loadJson<T>(key: string, fallback: T): T {
   }
 }
 
-export function AppStateProvider({ children }: { children: ReactNode }) {
+export function AppStateProvider({
+  children,
+  initialLive = null,
+}: {
+  children: ReactNode;
+  initialLive?: LiveToken | null;
+}) {
   const [ready, setReady] = useState(false);
   const [theme, setThemeState] = useState<Theme>("dark");
   const [chain, setChainState] = useState<ChainId>("robinhood");
   const [wallet, setWallet] = useState<string | null>(null);
+  const [live, setLive] = useState<LiveToken | null>(initialLive);
   const [positions, setPositions] = useState<Position[]>([]);
   const [stakeDeposits, setStakeDeposits] = useState<StakeDeposit[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -111,6 +119,26 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     if (!ready) return;
     localStorage.setItem(STAKE_KEY, JSON.stringify(stakeDeposits));
   }, [stakeDeposits, ready]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/token", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as { live: LiveToken | null };
+        if (!cancelled && data.live) setLive(data.live);
+      } catch {
+        /* keep SSR snapshot */
+      }
+    };
+    void load();
+    const id = window.setInterval(load, 60_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(id);
+    };
+  }, []);
 
   const setTheme = useCallback((t: Theme) => {
     document.documentElement.classList.add("theme-anim");
@@ -204,6 +232,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       wallet,
       connect,
       disconnect,
+      live,
       positions,
       stakeDeposits,
       addPosition,
@@ -222,6 +251,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       wallet,
       connect,
       disconnect,
+      live,
       positions,
       stakeDeposits,
       addPosition,

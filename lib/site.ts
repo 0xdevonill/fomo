@@ -2,10 +2,13 @@ function env(name: string, fallback = ""): string {
   return (process.env[name] ?? fallback).trim();
 }
 
+export const DEMO_TOKEN_CONTRACT =
+  "0x1Ad69dDD9D98dD71b6211339A1801fD128A3925D";
+
 export const site = {
-  tokenSymbol: env("NEXT_PUBLIC_TOKEN_SYMBOL", "HELIX"),
-  tokenName: env("NEXT_PUBLIC_TOKEN_NAME", "Helix"),
-  tokenContract: env("NEXT_PUBLIC_TOKEN_CONTRACT"),
+  tokenSymbol: env("NEXT_PUBLIC_TOKEN_SYMBOL"),
+  tokenName: env("NEXT_PUBLIC_TOKEN_NAME"),
+  tokenContract: env("NEXT_PUBLIC_TOKEN_CONTRACT", DEMO_TOKEN_CONTRACT),
   tokenContractSol: env("NEXT_PUBLIC_TOKEN_CONTRACT_SOL"),
   tokenLogo: env("NEXT_PUBLIC_TOKEN_LOGO"),
   tokenInfo: env("NEXT_PUBLIC_TOKEN_INFO"),
@@ -17,7 +20,9 @@ export const site = {
 
 export function isSiteToken(symbol: string): boolean {
   const s = symbol.toUpperCase();
-  return s === "HELIX" || s === site.tokenSymbol.toUpperCase();
+  if (s === "HELIX") return true;
+  if (site.tokenSymbol && s === site.tokenSymbol.toUpperCase()) return true;
+  return false;
 }
 
 export function contractFor(chain: "robinhood" | "sol"): string {

@@ -24,6 +24,19 @@ export type Token = {
   logo?: string;
 };
 
+export type LiveToken = {
+  symbol: string;
+  name: string;
+  address: string;
+  logo: string;
+  mc: number;
+  change24h: number;
+  vol24h: number;
+  trades24h: number;
+  fees24h: number | null;
+  ageHours: number;
+};
+
 export type Stake = {
   id: string;
   chain: ChainId;

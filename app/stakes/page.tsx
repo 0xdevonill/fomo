@@ -6,10 +6,12 @@ import { Sparkline } from "@/components/sparkline";
 import { TokenIcon } from "@/components/token-icon";
 import { useAppState } from "@/lib/app-state";
 import { formatQuote, formatUsd } from "@/lib/format";
-import { quoteUnit, stakesFor, tokenById } from "@/lib/tokens";
+import { quoteUnit } from "@/lib/tokens";
+import { useCatalog } from "@/lib/catalog";
 
 export default function StakesPage() {
   const { chain, wallet, addStakeDeposit, pushToast } = useAppState();
+  const { stakesFor, tokenById } = useCatalog();
   const stakes = stakesFor(chain);
   const quote = quoteUnit(chain);
   const total = stakes.reduce((s, x) => s + x.tvlQuote, 0);
@@ -79,7 +81,7 @@ export default function StakesPage() {
                   >
                     <td>
                       <span className="tok-link">
-                        <TokenIcon symbol={tok.symbol} size={28} />
+                        <TokenIcon symbol={tok.symbol} logo={tok.logo} size={28} />
                         <span className="tok-text">
                           <span className="tok-sym">
                             {quote} / {tok.symbol}
@@ -191,7 +193,7 @@ export default function StakesPage() {
             {createHits.map((t) =>
               t ? (
                 <Link key={t.id} href={`/pools/${t.id}`} className="tok-search-hit" style={{ position: "relative" }}>
-                  <TokenIcon symbol={t.symbol} size={18} />
+                  <TokenIcon symbol={t.symbol} logo={t.logo} size={18} />
                   <span className="tok-sym">{t.symbol}</span>
                   <span className="tok-name">{t.name}</span>
                   <span className="tok-addr">{formatUsd(t.mc)}</span>

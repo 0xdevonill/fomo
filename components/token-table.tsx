@@ -123,7 +123,7 @@ export function TokenTable({
                   >
                     <td>
                       <span className="tok-link">
-                        <TokenIcon symbol={t.symbol} size={28} />
+                        <TokenIcon symbol={t.symbol} logo={t.logo} size={28} />
                         <span className="tok-text">
                           <span className="tok-sym">{t.symbol}</span>
                           <span className="tok-name">{t.name}</span>

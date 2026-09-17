@@ -78,7 +78,7 @@ export function proxiedLogo(url: string): string {
 }
 
 export function rawLogoFor(symbol: string): string {
-  if (isSiteToken(symbol)) return site.tokenLogo || "/icon.svg";
+  if (isSiteToken(symbol)) return site.tokenLogo || "/token.svg";
   return RH_LOGOS[symbol] || SOL_LOGOS[symbol] || "";
 }
 

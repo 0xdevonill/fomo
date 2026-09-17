@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { AppShell } from "@/components/app-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppStateProvider } from "@/lib/app-state";
+import { fetchLiveToken } from "@/lib/live-token";
 import { PROTOCOL } from "@/lib/tokens";
 import "./globals.css";
 
@@ -27,7 +28,8 @@ export const metadata: Metadata = {
   icons: { icon: "/icon.svg" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const live = await fetchLiveToken();
   return (
     <html
       lang="en"
@@ -35,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${mono.variable} ${display.variable} dark h-full antialiased`}
     >
       <body className="min-h-full">
-        <AppStateProvider>
+        <AppStateProvider initialLive={live}>
           <TooltipProvider>
             <AppShell>{children}</AppShell>
           </TooltipProvider>

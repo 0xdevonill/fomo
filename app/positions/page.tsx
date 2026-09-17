@@ -6,10 +6,11 @@ import { TokenIcon } from "@/components/token-icon";
 import { WalletButton } from "@/components/wallet-button";
 import { useAppState } from "@/lib/app-state";
 import { formatUsd } from "@/lib/format";
-import { tokenById } from "@/lib/tokens";
+import { useCatalog } from "@/lib/catalog";
 
 export default function PositionsPage() {
   const { wallet, chain, positions, stakeDeposits, claimFees, withdrawPosition } = useAppState();
+  const { tokenById } = useCatalog();
   const mine = positions.filter((p) => p.chain === chain);
   const stakes = stakeDeposits.filter((s) => s.chain === chain);
 
@@ -72,7 +73,7 @@ export default function PositionsPage() {
             return (
               <div key={p.id} className="pos-card">
                 <div className="pos-card-head">
-                  <TokenIcon symbol={tok.symbol} size={34} />
+                  <TokenIcon symbol={tok.symbol} logo={tok.logo} size={34} />
                   <div>
                     <div className="tok-sym">{tok.symbol}</div>
                     <div className="tok-name" style={{ whiteSpace: "normal" }}>

@@ -17,10 +17,12 @@ import { TokenIcon } from "@/components/token-icon";
 import { WalletButton } from "@/components/wallet-button";
 import { useAppState } from "@/lib/app-state";
 import { formatUsd, shortAddr } from "@/lib/format";
-import { PROTOCOL, tokensFor } from "@/lib/tokens";
+import { PROTOCOL } from "@/lib/tokens";
+import { useCatalog } from "@/lib/catalog";
 
 export function Topbar() {
   const { theme, setTheme, chain, setChain } = useAppState();
+  const { tokensFor } = useCatalog();
   const totals = PROTOCOL.totals[chain];
   const [q, setQ] = useState("");
   const router = useRouter();
@@ -35,7 +37,7 @@ export function Topbar() {
           t.address.toLowerCase().includes(query)
       )
       .slice(0, 8);
-  }, [q, chain]);
+  }, [q, chain, tokensFor]);
 
   return (
     <header className="topbar">
@@ -73,7 +75,7 @@ export function Topbar() {
                       setQ("");
                     }}
                   >
-                    <TokenIcon symbol={t.symbol} size={18} />
+                    <TokenIcon symbol={t.symbol} logo={t.logo} size={18} />
                     <span className="tok-sym">{t.symbol}</span>
                     <span className="tok-name">{t.name}</span>
                     <span className="tok-addr">{shortAddr(t.address)}</span>

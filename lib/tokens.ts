@@ -1,7 +1,7 @@
 import { fakeEvm, fakeSol } from "@/lib/format";
 import { rawLogoFor } from "@/lib/logos";
 import { contractFor, site } from "@/lib/site";
-import type { ChainId, ListKind, Quote, Stake, Token } from "@/lib/types";
+import type { ChainId, ListKind, LiveToken, Quote, Stake, Token } from "@/lib/types";
 
 type Draft = {
   symbol: string;
@@ -19,7 +19,30 @@ type Draft = {
 
 function branded(d: Draft): Draft {
   if (!d.featured) return d;
-  return { ...d, symbol: site.tokenSymbol, name: site.tokenName };
+  return {
+    ...d,
+    symbol: site.tokenSymbol || d.symbol,
+    name: site.tokenName || d.name,
+  };
+}
+
+export function overlayLive(token: Token, live: LiveToken | null): Token {
+  if (!live || !token.featured) return token;
+  if (token.chain === "sol" && !site.tokenContractSol) return token;
+  if (token.chain === "robinhood" && !site.tokenContract) return token;
+  return {
+    ...token,
+    symbol: live.symbol || token.symbol,
+    name: live.name || token.name,
+    logo: live.logo || token.logo,
+    address: live.address || token.address,
+    mc: live.mc,
+    change24h: live.change24h,
+    vol24h: live.vol24h,
+    trades24h: live.trades24h,
+    fees24h: live.fees24h,
+    ageHours: live.ageHours,
+  };
 }
 
 function make(chain: ChainId, d: Draft): Token {
@@ -114,7 +137,7 @@ export const TOKENS: Token[] = [
 ];
 
 const rhStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: number }[] = [
-  { symbol: site.tokenSymbol, tvl: 5.0274, rate7d: 42.8, fees24h: 0.018 },
+  { symbol: site.tokenSymbol || "HELIX", tvl: 5.0274, rate7d: 42.8, fees24h: 0.018 },
   { symbol: "INU", tvl: 3.3873, rate7d: 0, fees24h: 0 },
   { symbol: "NVDA", tvl: 0.6756, rate7d: 0, fees24h: 0 },
   { symbol: "CASHCAT", tvl: 0.4915, rate7d: 163.33, fees24h: 0.22 },
@@ -130,7 +153,7 @@ const rhStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: n
 ];
 
 const solStakes: { symbol: string; tvl: number; rate7d: number | null; fees24h: number }[] = [
-  { symbol: site.tokenSymbol, tvl: 842.4, rate7d: 38.6, fees24h: 3.12 },
+  { symbol: site.tokenSymbol || "HELIX", tvl: 842.4, rate7d: 38.6, fees24h: 3.12 },
   { symbol: "BONK", tvl: 612.1, rate7d: 21.4, fees24h: 2.08 },
   { symbol: "JUP", tvl: 401.8, rate7d: 14.2, fees24h: 1.44 },
   { symbol: "WIF", tvl: 288.0, rate7d: 29.7, fees24h: 1.91 },
@@ -164,8 +187,8 @@ export const STAKES: Stake[] = [
 ];
 
 export const PROTOCOL = {
-  name: site.tokenName,
-  token: site.tokenSymbol,
+  name: site.tokenName || "Helix",
+  token: site.tokenSymbol || "HELIX",
   tagline:
     site.tokenInfo ||
     "Liquidity stakes and concentrated liquidity pools on Robinhood Chain and Solana. Stake into pools for a proportional share of trading fees, and build shaped positions from a single coin.",

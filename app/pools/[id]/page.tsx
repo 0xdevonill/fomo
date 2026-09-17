@@ -7,7 +7,8 @@ import { PriceChart } from "@/components/price-chart";
 import { TokenIcon } from "@/components/token-icon";
 import { useAppState } from "@/lib/app-state";
 import { formatAge, formatInt, formatPct, formatUsd, shortAddr } from "@/lib/format";
-import { PROTOCOL, quoteUnit, tokenById } from "@/lib/tokens";
+import { PROTOCOL, quoteUnit } from "@/lib/tokens";
+import { useCatalog } from "@/lib/catalog";
 import type { ShapeId } from "@/lib/types";
 
 const SHAPES: { id: ShapeId; label: string; hint: string }[] = [
@@ -18,9 +19,10 @@ const SHAPES: { id: ShapeId; label: string; hint: string }[] = [
 
 export default function PoolDetailPage() {
   const params = useParams<{ id: string }>();
-  const token = tokenById(params.id);
   const router = useRouter();
   const { wallet, addPosition, chain, pushToast } = useAppState();
+  const { tokenById } = useCatalog();
+  const token = tokenById(params.id);
   const [shape, setShape] = useState<ShapeId>("concentrated");
   const [amount, setAmount] = useState("250");
   const [copied, setCopied] = useState(false);
@@ -52,7 +54,7 @@ export default function PoolDetailPage() {
     <div className="token-page">
       <div>
         <div className="tok-hero">
-          <TokenIcon symbol={token.symbol} size={46} />
+          <TokenIcon symbol={token.symbol} logo={token.logo} size={46} />
           <div className="tok-hero-id">
             <h1>{token.symbol}</h1>
             <div className="sub">{token.name}</div>

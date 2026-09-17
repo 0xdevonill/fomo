@@ -20,7 +20,7 @@ export function MarketBand({
     <div className="mband">
       <Link className="mspot mspot--hero" href={`/pools/${featured.id}`}>
         <span className="mspot-id">
-          <TokenIcon symbol={featured.symbol} size={44} />
+          <TokenIcon symbol={featured.symbol} logo={featured.logo} size={44} />
           <span className="mspot-sym">{featured.symbol}</span>
         </span>
         <span className="mspot-hero-stats">
@@ -57,7 +57,7 @@ export function MarketBand({
         <Link className="mspot mspot--sm mspot--vol" href={`/pools/${traded.id}`}>
           <span className="mspot-k">Most traded · 24h</span>
           <span className="mspot-id">
-            <TokenIcon symbol={traded.symbol} size={26} />
+            <TokenIcon symbol={traded.symbol} logo={traded.logo} size={26} />
             <span className="mspot-sym">{traded.symbol}</span>
           </span>
           <span className="mspot-foot">
@@ -71,7 +71,7 @@ export function MarketBand({
         <Link className="mspot mspot--sm mspot--teal" href={`/pools/${volume.id}`}>
           <span className="mspot-k">Highest volume · 24h</span>
           <span className="mspot-id">
-            <TokenIcon symbol={volume.symbol} size={26} />
+            <TokenIcon symbol={volume.symbol} logo={volume.logo} size={26} />
             <span className="mspot-sym">{volume.symbol}</span>
           </span>
           <span className="mspot-foot">

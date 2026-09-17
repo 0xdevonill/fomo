@@ -4,10 +4,12 @@ import { MarketBand } from "@/components/market-band";
 import { SparkDefs } from "@/components/sparkline";
 import { listTokens, TokenTable } from "@/components/token-table";
 import { useAppState } from "@/lib/app-state";
-import { featuredToken, highestVolume, mostTraded, quoteFilters, tokensFor } from "@/lib/tokens";
+import { useCatalog } from "@/lib/catalog";
+import { quoteFilters } from "@/lib/tokens";
 
 export default function PoolsPage() {
   const { chain } = useAppState();
+  const { tokensFor, featuredToken, mostTraded, highestVolume } = useCatalog();
   const tokens = tokensFor(chain);
   const featured = featuredToken(chain);
   const traded = mostTraded(chain);
