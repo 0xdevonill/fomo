@@ -22,6 +22,7 @@ export type Token = {
   lists: ListKind[];
   address: string;
   logo?: string;
+  priceUsd?: number;
 };
 
 export type LiveToken = {
@@ -35,6 +36,7 @@ export type LiveToken = {
   trades24h: number;
   fees24h: number | null;
   ageHours: number;
+  priceUsd: number;
 };
 
 export type Stake = {

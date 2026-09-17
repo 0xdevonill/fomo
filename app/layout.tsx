@@ -25,7 +25,7 @@ const display = Space_Grotesk({
 export const metadata: Metadata = {
   title: PROTOCOL.name,
   description: PROTOCOL.tagline,
-  icons: { icon: "/icon.svg" },
+  icons: { icon: "/logo.jpg", apple: "/logo.jpg" },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

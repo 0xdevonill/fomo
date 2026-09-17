@@ -38,6 +38,15 @@ export function formatUsd(n: number | null, digits = 2): string {
   return `${sign}$${abs.toFixed(2)}`;
 }
 
+export function formatPrice(n: number | null | undefined): string {
+  if (n === null || n === undefined || Number.isNaN(n) || n <= 0) return "—";
+  if (n >= 1) return formatUsd(n);
+  if (n >= 0.01) return `$${n.toFixed(4)}`;
+  if (n >= 0.0001) return `$${n.toFixed(6)}`;
+  const fixed = n.toFixed(10).replace(/0+$/, "").replace(/\.$/, "");
+  return `$${fixed}`;
+}
+
 function trimNum(n: number): string {
   const s = n >= 100 ? n.toFixed(0) : n >= 10 ? n.toFixed(1) : n.toFixed(2);
   return s.replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");

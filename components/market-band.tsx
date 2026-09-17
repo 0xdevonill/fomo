@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Sparkline } from "@/components/sparkline";
 import { TokenIcon } from "@/components/token-icon";
-import { formatInt, formatPct, formatUsd } from "@/lib/format";
+import { formatInt, formatPct, formatPrice, formatUsd } from "@/lib/format";
 import type { Token } from "@/lib/types";
 
 export function MarketBand({
@@ -24,6 +24,10 @@ export function MarketBand({
           <span className="mspot-sym">{featured.symbol}</span>
         </span>
         <span className="mspot-hero-stats">
+          <span className="ms">
+            <span className="k">Price</span>
+            <span className="v">{formatPrice(featured.priceUsd)}</span>
+          </span>
           <span className="ms">
             <span className="k">Market cap</span>
             <span className="v">{formatUsd(featured.mc)} MC</span>

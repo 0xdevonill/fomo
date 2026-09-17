@@ -6,7 +6,7 @@ import { Check, Copy } from "lucide-react";
 import { PriceChart } from "@/components/price-chart";
 import { TokenIcon } from "@/components/token-icon";
 import { useAppState } from "@/lib/app-state";
-import { formatAge, formatInt, formatPct, formatUsd, shortAddr } from "@/lib/format";
+import { formatAge, formatInt, formatPct, formatPrice, formatUsd, shortAddr } from "@/lib/format";
 import { PROTOCOL, quoteUnit } from "@/lib/tokens";
 import { useCatalog } from "@/lib/catalog";
 import type { ShapeId } from "@/lib/types";
@@ -29,7 +29,7 @@ export default function PoolDetailPage() {
 
   const price = useMemo(() => {
     if (!token) return 0;
-    return token.mc / 1_000_000_000;
+    return token.priceUsd && token.priceUsd > 0 ? token.priceUsd : token.mc / 1_000_000_000;
   }, [token]);
 
   if (!token || token.chain !== chain) {
@@ -99,6 +99,10 @@ export default function PoolDetailPage() {
         </div>
         <div className="stat-strip">
           <div className="stat">
+            <div className="k">Price</div>
+            <div className="v">{formatPrice(token.priceUsd ?? price)}</div>
+          </div>
+          <div className="stat">
             <div className="k">Market cap</div>
             <div className="v">{formatUsd(token.mc)}</div>
           </div>
@@ -109,10 +113,6 @@ export default function PoolDetailPage() {
           <div className="stat">
             <div className="k">Vol 24h</div>
             <div className="v">{formatUsd(token.vol24h)}</div>
-          </div>
-          <div className="stat">
-            <div className="k">Fees 24h</div>
-            <div className="v">{formatUsd(token.fees24h)}</div>
           </div>
         </div>
         <div className="chart-card">

@@ -42,6 +42,7 @@ export function overlayLive(token: Token, live: LiveToken | null): Token {
     trades24h: live.trades24h,
     fees24h: live.fees24h,
     ageHours: live.ageHours,
+    priceUsd: live.priceUsd,
   };
 }
 

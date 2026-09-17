@@ -241,8 +241,19 @@ body {
 .brand {
   display: flex;
   flex: none;
+  align-items: center;
 }
 
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 22%;
+  object-fit: cover;
+  display: block;
+  background: #d0ff00;
+}
+
+.brand:hover .brand-mark,
 .brand:hover svg {
   filter: drop-shadow(0 0 6px #3f9e7499);
 }

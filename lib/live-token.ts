@@ -1,4 +1,4 @@
-import { site } from "@/lib/site";
+import { BRAND_LOGO, isDemoContract, site } from "@/lib/site";
 import type { LiveToken } from "@/lib/types";
 
 const DEMO_CONTRACT = "0x1Ad69dDD9D98dD71b6211339A1801fD128A3925D";
@@ -6,6 +6,7 @@ const DEMO_CONTRACT = "0x1Ad69dDD9D98dD71b6211339A1801fD128A3925D";
 type DexPair = {
   chainId?: string;
   pairCreatedAt?: number;
+  priceUsd?: string;
   priceChange?: { h24?: number };
   volume?: { h24?: number };
   txns?: { h24?: { buys?: number; sells?: number } };
@@ -95,26 +96,33 @@ export async function fetchLiveToken(): Promise<LiveToken | null> {
   const vol = pair?.volume?.h24 ?? num(g?.volume_usd?.h24);
   const buys = pair?.txns?.h24?.buys ?? 0;
   const sells = pair?.txns?.h24?.sells ?? 0;
-  const symbol = site.tokenSymbol || pair?.baseToken?.symbol || g?.symbol || "HELIX";
-  const name = site.tokenName || pair?.baseToken?.name || g?.name || "Helix";
-  const logo =
-    site.tokenLogo ||
-    g?.image_url ||
-    pair?.info?.imageUrl ||
-    "";
+  const chainLogo = g?.image_url || pair?.info?.imageUrl || "";
+  const chainSymbol = pair?.baseToken?.symbol || g?.symbol || "HELIX";
+  const chainName = pair?.baseToken?.name || g?.name || "Helix";
+  const priceUsd = num(pair?.priceUsd) || num(g?.price_usd);
+  const brandLogo = site.tokenLogo || BRAND_LOGO;
+  // Demo contract keeps Helix branding + this logo. Swap the address after
+  // you create the token and name, ticker, on-chain logo, and price load.
+  const placeholder =
+    isDemoContract(address) && !site.tokenName && !site.tokenSymbol && !site.tokenLogo;
+
+  const symbol = site.tokenSymbol || (placeholder ? "HELIX" : chainSymbol);
+  const name = site.tokenName || (placeholder ? "Helix" : chainName);
+  const logo = site.tokenLogo || (placeholder ? brandLogo : chainLogo || brandLogo);
 
   if (!pair && !g) {
     return {
       symbol,
       name,
       address,
-      logo: logo || "/token.svg",
+      logo: logo || brandLogo,
       mc: 0,
       change24h: 0,
       vol24h: 0,
       trades24h: 0,
       fees24h: null,
       ageHours,
+      priceUsd: 0,
     };
   }
 
@@ -122,12 +130,13 @@ export async function fetchLiveToken(): Promise<LiveToken | null> {
     symbol,
     name,
     address: pair?.baseToken?.address || g?.address || address,
-    logo: logo || "/token.svg",
+    logo: logo || brandLogo,
     mc: pair?.marketCap || pair?.fdv || num(g?.fdv_usd),
     change24h: pair?.priceChange?.h24 ?? 0,
     vol24h: vol,
     trades24h: Math.max(0, buys + sells),
     fees24h: vol > 0 ? vol * 0.003 : null,
     ageHours,
+    priceUsd,
   };
 }

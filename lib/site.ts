@@ -6,6 +6,8 @@ function env(name: string, fallback = ""): string {
 export const DEMO_TOKEN_CONTRACT =
   "0x1Ad69dDD9D98dD71b6211339A1801fD128A3925D";
 
+export const BRAND_LOGO = "/logo.jpg";
+
 export const site = {
   tokenSymbol: env("NEXT_PUBLIC_TOKEN_SYMBOL"),
   tokenName: env("NEXT_PUBLIC_TOKEN_NAME"),
@@ -18,6 +20,10 @@ export const site = {
   ponsUrl: env("NEXT_PUBLIC_PONS_URL"),
   ponsId: env("NEXT_PUBLIC_PONS_ID"),
 };
+
+export function isDemoContract(address: string): boolean {
+  return address.trim().toLowerCase() === DEMO_TOKEN_CONTRACT.toLowerCase();
+}
 
 export function isSiteToken(symbol: string): boolean {
   const s = symbol.toUpperCase();

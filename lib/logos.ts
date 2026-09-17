@@ -1,4 +1,4 @@
-import { isSiteToken, site } from "@/lib/site";
+import { BRAND_LOGO, isSiteToken, site } from "@/lib/site";
 
 const RH_LOGOS: Record<string, string> = {
   SPCX: "https://coin-images.coingecko.com/coins/images/102174129/large/0x4a0e65a3eccec6dbe60ae065f2e7bb85fae35eea.png",
@@ -78,7 +78,7 @@ export function proxiedLogo(url: string): string {
 }
 
 export function rawLogoFor(symbol: string): string {
-  if (isSiteToken(symbol)) return site.tokenLogo || "/token.svg";
+  if (isSiteToken(symbol)) return site.tokenLogo || BRAND_LOGO;
   return RH_LOGOS[symbol] || SOL_LOGOS[symbol] || "";
 }
 
