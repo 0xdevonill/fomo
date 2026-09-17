@@ -1,5 +1,6 @@
 function env(name: string, fallback = ""): string {
-  return (process.env[name] ?? fallback).trim();
+  const v = (process.env[name] ?? "").trim();
+  return v || fallback;
 }
 
 export const DEMO_TOKEN_CONTRACT =
