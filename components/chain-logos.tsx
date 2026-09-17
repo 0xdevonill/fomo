@@ -25,16 +25,10 @@ export function SolLogo({ size = 18 }: { size?: number }) {
       viewBox="0 0 32 32"
       aria-hidden
     >
-      <rect width="32" height="32" rx="9" fill="#0b0b12" />
-      <defs>
-        <linearGradient id="sol-logo-grad" x1="6" y1="8" x2="26" y2="24" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#00FFA3" />
-          <stop offset="1" stopColor="#DC1FFF" />
-        </linearGradient>
-      </defs>
+      <rect width="32" height="32" rx="9" fill="#9945FF" />
       <path
-        fill="url(#sol-logo-grad)"
-        d="M9.2 20.6h12.4l-2.4 2.6H6.8zM9.2 14.7h12.4l-2.4 2.6H6.8zM22.8 8.8H10.4L12.8 6.2h12.4z"
+        fill="#fff"
+        d="M9.1 20.4h12.6l-2.5 2.7H6.6zM9.1 14.65h12.6l-2.5 2.7H6.6zM22.9 8.9H10.3L12.8 6.2h12.6z"
       />
     </svg>
   );

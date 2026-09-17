@@ -425,7 +425,7 @@ body {
 }
 
 .chain-switch-btn:not(.on) .chain-logo {
-  filter: grayscale(0.35) saturate(0.8);
+  filter: grayscale(0.15) saturate(0.85);
 }
 
 .header-stats {
