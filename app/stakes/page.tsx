@@ -62,6 +62,7 @@ export default function StakesPage() {
                 <th>7d rate</th>
                 <th>24h fees</th>
                 <th>Trend</th>
+                <th> </th>
               </tr>
             </thead>
             <tbody>
@@ -69,11 +70,12 @@ export default function StakesPage() {
                 const tok = tokenById(s.tokenId);
                 if (!tok) return null;
                 const up = (s.rate7d ?? 0) >= 0;
+                const on = selected === s.id;
                 return (
                   <tr
                     key={s.id}
                     onClick={() => setSelected(s.id)}
-                    style={selected === s.id ? { background: "var(--pine-tint)" } : undefined}
+                    className={on ? "is-selected" : undefined}
                   >
                     <td>
                       <span className="tok-link">
@@ -104,6 +106,22 @@ export default function StakesPage() {
                         <span style={{ color: "var(--text-3)" }}>—</span>
                       )}
                     </td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelected(s.id);
+                          document.getElementById("stake-deposit")?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }}
+                      >
+                        Deposit
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -112,7 +130,7 @@ export default function StakesPage() {
         </div>
       </div>
       <div className="token-page" style={{ gridTemplateColumns: "1fr 1fr" }}>
-        <div className="action-panel panel-pad">
+        <div className="action-panel panel-pad" id="stake-deposit">
           <div className="ap-title">
             <h3>Deposit into {activeToken?.symbol ?? "stake"}</h3>
           </div>

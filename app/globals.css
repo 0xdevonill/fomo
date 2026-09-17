@@ -1036,6 +1036,18 @@ a.btn {
   box-shadow: inset 2px 0 0 var(--pine-bright);
 }
 
+.ftable tbody tr.is-selected td {
+  background: var(--pine-tint);
+}
+
+.ftable tbody tr.is-selected td:first-child {
+  box-shadow: inset 2px 0 0 var(--pine-bright);
+}
+
+#stake-deposit {
+  scroll-margin-top: calc(var(--topbar-h) + 16px);
+}
+
 .tok-link {
   color: var(--text);
   align-items: center;
