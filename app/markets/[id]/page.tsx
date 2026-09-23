@@ -132,7 +132,7 @@ export default function MarketDetailPage() {
             </div>
             <div>
               <dt>Collateral</dt>
-              <dd>{v.book.collateral ? "On" : "Off"}</dd>
+              <dd>{v.book.supplied > 0 ? (v.book.collateral ? "On" : "Off") : "—"}</dd>
             </div>
           </dl>
           <div className="mkt-acts" style={{ marginTop: 12 }}>

@@ -50,7 +50,7 @@ export function WalletButton() {
       if (walletEnv.live) setWallet(addr);
     },
     onDisconnect() {
-      if (walletEnv.live) setWallet(null);
+      // Leave a Demo book session in place. The chip still disconnects explicitly.
     },
   });
 
@@ -58,7 +58,9 @@ export function WalletButton() {
   const wallets =
     chain === "sol"
       ? ["Phantom", "Solflare", "WalletConnect"]
-      : ["MetaMask", "Rabby", "WalletConnect"];
+      : live
+        ? ["MetaMask", "Rabby", "WalletConnect", "Demo book"]
+        : ["MetaMask", "Rabby", "WalletConnect"];
 
   const pickConnector = (kind: string) => {
     const k = kind.toLowerCase();
@@ -93,12 +95,14 @@ export function WalletButton() {
   };
 
   const onConnect = async (kind: string) => {
-    if (!live) {
-      connect(kind);
+    if (!live || kind === "Demo book") {
+      connect(kind === "Demo book" ? "Demo" : kind);
       setOpen(false);
       pushToast(
         "Wallet connected",
-        `${kind} on ${chain === "sol" ? "Solana" : "Robinhood Chain"}`
+        kind === "Demo book"
+          ? "Local demo book on Robinhood Chain. No mainnet tx."
+          : `${kind} on ${chain === "sol" ? "Solana" : "Robinhood Chain"}`
       );
       return;
     }

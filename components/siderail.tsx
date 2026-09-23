@@ -18,10 +18,10 @@ import { PROTOCOL } from "@/lib/tokens";
 const items = [
   { href: "/app", label: "Dashboard", icon: LayoutDashboard },
   { href: "/markets", label: "Markets", icon: ChartCandlestick },
-  { href: "/pools", label: "Pools", icon: BookOpen },
-  { href: "/stakes", label: "Stakes", icon: Layers },
+  { href: "/pools", label: "Pools", icon: BookOpen, desktop: true },
+  { href: "/stakes", label: "Stakes", icon: Layers, desktop: true },
   { href: "/positions", label: "Positions", icon: Wallet },
-  { href: "/academy", label: "Academy", icon: GraduationCap },
+  { href: "/academy", label: "Academy", icon: GraduationCap, desktop: true },
 ];
 
 export function Siderail() {
@@ -44,7 +44,7 @@ export function Siderail() {
             <Link
               key={it.href}
               href={it.href}
-              className={`rail-item ${active ? "active" : ""}`}
+              className={`rail-item ${active ? "active" : ""}${it.desktop ? " desktop-only" : ""}`}
               aria-current={active ? "page" : undefined}
             >
               <span className="rail-ico">
@@ -58,7 +58,7 @@ export function Siderail() {
       <div className="rail-group rail-group--end">
         <div className="rail-sep" aria-hidden />
         <a
-          className="rail-item rail-social"
+          className="rail-item"
           href={ponsHref}
           target="_blank"
           rel="noopener noreferrer"
@@ -90,7 +90,7 @@ export function Siderail() {
           <span className="rail-label">X</span>
         </a>
         <a
-          className="rail-item"
+          className="rail-item desktop-only"
           href={PONS_DOCS}
           target="_blank"
           rel="noopener noreferrer"

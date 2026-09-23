@@ -23,7 +23,6 @@ import type {
 import { fakeEvm, fakeSol } from "@/lib/format";
 import { accrueBooks, applyAction, toggleCollateral } from "@/lib/lend";
 import { overlayMarkets, seedBag } from "@/lib/markets";
-import { wallet as walletEnv } from "@/lib/site";
 
 type Theme = "dark" | "light";
 
@@ -125,7 +124,7 @@ export function AppStateProvider({
     const w = loadJson<string | null>(WALLET_KEY, null);
     setThemeState(t === "light" ? "light" : "dark");
     setChainState(c === "sol" ? "sol" : "robinhood");
-    if (!walletEnv.live) setWallet(w);
+    if (w) setWallet(w);
     setPositions(loadJson(POS_KEY, []));
     setStakeDeposits(loadJson(STAKE_KEY, []));
     const stored = loadJson<LendStore | null>(LEND_KEY, null);
@@ -156,7 +155,7 @@ export function AppStateProvider({
   }, [chain, ready]);
 
   useEffect(() => {
-    if (!ready || walletEnv.live) return;
+    if (!ready) return;
     if (wallet) localStorage.setItem(WALLET_KEY, JSON.stringify(wallet));
     else localStorage.removeItem(WALLET_KEY);
   }, [wallet, ready]);

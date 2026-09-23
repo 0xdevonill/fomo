@@ -89,7 +89,9 @@ export function MarketOverview({
                 <td>{formatApy(m.borrowApy)}</td>
                 <td>
                   <span className="util">
-                    <i style={{ width: `${Math.round(util * 100)}%` }} />
+                    <span className="util-bar" aria-hidden>
+                      <i style={{ width: `${Math.round(util * 100)}%` }} />
+                    </span>
                     {Math.round(util * 100)}%
                   </span>
                 </td>

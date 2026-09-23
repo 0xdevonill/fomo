@@ -2955,15 +2955,19 @@ a.btn {
   min-width: 72px;
 }
 
-.util i {
-  display: block;
-  height: 4px;
+.util-bar {
+  display: inline-block;
   width: 48px;
-  max-width: 48px;
-  background: var(--pine-bright);
+  height: 4px;
+  background: var(--line-2);
   border-radius: 99px;
-  box-shadow: inset 48px 0 0 var(--line-2);
-  background-clip: content-box;
+  overflow: hidden;
+}
+
+.util-bar i {
+  display: block;
+  height: 100%;
+  background: var(--pine-bright);
 }
 
 .pos {
