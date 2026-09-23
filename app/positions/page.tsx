@@ -10,10 +10,12 @@ import { useCatalog } from "@/lib/catalog";
 import { PROTOCOL } from "@/lib/tokens";
 
 export default function PositionsPage() {
-  const { wallet, chain, positions, stakeDeposits, claimFees, withdrawPosition } = useAppState();
+  const { wallet, chain, positions, stakeDeposits, claimFees, withdrawPosition, lendBooks } =
+    useAppState();
   const { tokenById } = useCatalog();
   const mine = positions.filter((p) => p.chain === chain);
   const stakes = stakeDeposits.filter((s) => s.chain === chain);
+  const books = lendBooks.filter((b) => b.supplied > 0 || b.borrowed > 0);
 
   if (!wallet) {
     return (
@@ -42,11 +44,28 @@ export default function PositionsPage() {
       <div className="page-lead">
         <h1>Positions</h1>
         <p>
-          Once you mint, a card shows current value, holdings, unclaimed fees, and PnL.{" "}
-          {PROTOCOL.name} takes 7.5% from fees you claim, never from principal.
+          Lending books, shaped pools, and stake deposits land here.{" "}
+          {PROTOCOL.name} takes 7.5% from claimed pool fees, never from supplied principal.
         </p>
       </div>
-      {mine.length === 0 && stakes.length === 0 ? (
+      {books.length > 0 ? (
+        <div className="pos-card">
+          <div className="pos-card-head">
+            <div>
+              <div className="tok-sym">Lending book</div>
+              <div className="tok-name">{books.length} open market{books.length === 1 ? "" : "s"}</div>
+            </div>
+            <Link href="/app" className="btn btn-ghost btn-sm" style={{ marginLeft: "auto" }}>
+              Dashboard
+            </Link>
+          </div>
+          <p style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.55 }}>
+            Manage supply, borrow, repay, and collateral from the dashboard. This card is the
+            index.
+          </p>
+        </div>
+      ) : null}
+      {mine.length === 0 && stakes.length === 0 && books.length === 0 ? (
         <div className="action-panel panel-pad empty">
           <div className="e-icon">
             <Wallet size={18} />
@@ -57,11 +76,11 @@ export default function PositionsPage() {
             is locked. Withdraw whenever you want.
           </p>
           <div className="pos-actions">
-            <Link href="/pools" className="btn">
-              Browse pools
+            <Link href="/app" className="btn">
+              Open dashboard
             </Link>
-            <Link href="/stakes" className="btn btn-ghost">
-              View stakes
+            <Link href="/pools" className="btn btn-ghost">
+              Browse pools
             </Link>
           </div>
         </div>

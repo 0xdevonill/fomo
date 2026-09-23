@@ -9,8 +9,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { ChainId, LiveToken, Position, ShapeId, StakeDeposit, Token } from "@/lib/types";
+import type {
+  ChainId,
+  LendAction,
+  LendBag,
+  LendBook,
+  LiveToken,
+  Position,
+  ShapeId,
+  StakeDeposit,
+  Token,
+} from "@/lib/types";
 import { fakeEvm, fakeSol } from "@/lib/format";
+import { accrueBooks, applyAction, toggleCollateral } from "@/lib/lend";
+import { overlayMarkets, seedBag } from "@/lib/markets";
 import { wallet as walletEnv } from "@/lib/site";
 
 type Theme = "dark" | "light";
@@ -42,6 +54,10 @@ type AppState = {
   addStakeDeposit: (stakeId: string, amountQuote: number) => void;
   claimFees: (positionId: string) => void;
   withdrawPosition: (positionId: string) => void;
+  lendBooks: LendBook[];
+  lendBag: LendBag;
+  runLend: (action: LendAction, marketId: string, amount: number) => boolean;
+  setCollateral: (marketId: string, on: boolean) => boolean;
   toasts: Toast[];
   pushToast: (title: string, body?: string) => void;
 };
@@ -54,6 +70,13 @@ const THEME_KEY = "helix.theme";
 const CHAIN_KEY = "helix.chain";
 const WALLET_KEY = "helix.wallet";
 const FOUND_KEY = "helix.found";
+const LEND_KEY = "ping.lend";
+
+type LendStore = {
+  books: LendBook[];
+  bag: LendBag;
+  updatedAt: number;
+};
 
 function loadJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -90,11 +113,13 @@ export function AppStateProvider({
   const [foundTokens, setFoundTokens] = useState<Token[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
   const [stakeDeposits, setStakeDeposits] = useState<StakeDeposit[]>([]);
+  const [lendBooks, setLendBooks] = useState<LendBook[]>([]);
+  const [lendBag, setLendBag] = useState<LendBag>({});
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   useEffect(() => {
     // Restore client-only persisted UI after hydration.
-    /* eslint-disable react-hooks/set-state-in-effect -- localStorage bootstrap */
+    /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps -- localStorage bootstrap */
     const t = loadJson<Theme>(THEME_KEY, "dark");
     const c = loadJson<ChainId>(CHAIN_KEY, "robinhood");
     const w = loadJson<string | null>(WALLET_KEY, null);
@@ -103,6 +128,15 @@ export function AppStateProvider({
     if (!walletEnv.live) setWallet(w);
     setPositions(loadJson(POS_KEY, []));
     setStakeDeposits(loadJson(STAKE_KEY, []));
+    const stored = loadJson<LendStore | null>(LEND_KEY, null);
+    const now = Date.now();
+    if (stored && Array.isArray(stored.books)) {
+      const markets = overlayMarkets(initialLive);
+      setLendBooks(accrueBooks(markets, stored.books, stored.updatedAt || now, now));
+      setLendBag(stored.bag && Object.keys(stored.bag).length ? stored.bag : seedBag());
+    } else {
+      setLendBag(seedBag());
+    }
     setFoundTokens(loadSession(FOUND_KEY, []));
     setReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
@@ -131,6 +165,14 @@ export function AppStateProvider({
     if (!ready) return;
     localStorage.setItem(POS_KEY, JSON.stringify(positions));
   }, [positions, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    localStorage.setItem(
+      LEND_KEY,
+      JSON.stringify({ books: lendBooks, bag: lendBag, updatedAt: Date.now() } satisfies LendStore)
+    );
+  }, [lendBooks, lendBag, ready]);
 
   useEffect(() => {
     if (!ready) return;
@@ -254,6 +296,48 @@ export function AppStateProvider({
     [pushToast]
   );
 
+  const runLend = useCallback<AppState["runLend"]>(
+    (action, marketId, amount) => {
+      const markets = overlayMarkets(live);
+      const result = applyAction(markets, lendBooks, lendBag, action, marketId, amount);
+      if (!result.ok) {
+        pushToast("Action blocked", result.error);
+        return false;
+      }
+      setLendBooks(result.books);
+      setLendBag(result.bag);
+      const labels: Record<LendAction, string> = {
+        supply: "Supplied",
+        withdraw: "Withdrawn",
+        borrow: "Borrowed",
+        repay: "Repaid",
+      };
+      pushToast(
+        labels[action],
+        action === "borrow"
+          ? "0.30% origination fee applied. Health factor updated."
+          : "Held in the protocol book. Only this wallet can move it."
+      );
+      return true;
+    },
+    [live, lendBooks, lendBag, pushToast]
+  );
+
+  const setLendCollateral = useCallback<AppState["setCollateral"]>(
+    (marketId, on) => {
+      const markets = overlayMarkets(live);
+      const result = toggleCollateral(markets, lendBooks, marketId, on);
+      if (!result.ok) {
+        pushToast("Collateral locked", result.error);
+        return false;
+      }
+      setLendBooks(result.books);
+      pushToast(on ? "Used as collateral" : "Collateral off", "Borrow power and health factor updated.");
+      return true;
+    },
+    [live, lendBooks, pushToast]
+  );
+
   const value = useMemo<AppState>(
     () => ({
       ready,
@@ -274,6 +358,10 @@ export function AppStateProvider({
       addStakeDeposit,
       claimFees,
       withdrawPosition,
+      lendBooks,
+      lendBag,
+      runLend,
+      setCollateral: setLendCollateral,
       toasts,
       pushToast,
     }),
@@ -296,6 +384,10 @@ export function AppStateProvider({
       addStakeDeposit,
       claimFees,
       withdrawPosition,
+      lendBooks,
+      lendBag,
+      runLend,
+      setLendCollateral,
       toasts,
       pushToast,
     ]

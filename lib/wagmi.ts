@@ -15,7 +15,7 @@ const connectors = [
           metadata: {
             name: "Fomo Ping",
             description:
-              "The notification token of Robinhood Chain — fair launch, real LP fees.",
+              "Lending protocol on Robinhood Chain, aligned with pons.",
             url: "https://newdexx.vercel.app",
             icons: ["https://newdexx.vercel.app/logo.png"],
           },

@@ -3,45 +3,45 @@ import { PROTOCOL } from "@/lib/tokens";
 
 export const metadata = {
   title: `${PROTOCOL.name} Academy`,
-  description: `Learn the ${PROTOCOL.token} ping, then provide liquidity on Robinhood Chain without the jargon wall.`,
+  description: `Learn supply, borrow, health factor, and pons on Robinhood Chain.`,
 };
 
 const lessons = [
   {
     n: "01",
-    title: `Why $${PROTOCOL.token}`,
-    body: "The chain has no official token. The ping is the alert. Read the lore, then the disclaimer.",
-    href: "/",
+    title: "Why this is not TON",
+    body: "EVAA lives on TON. This book is Robinhood Chain. ETH pays gas. pons is the launchpad.",
+    href: "/docs",
   },
   {
     n: "02",
-    title: "Pools vs stakes",
-    body: "A pool is a market. A stake is a share of that market’s fees. Start here if you only have five minutes.",
-    href: "/docs",
+    title: "Supply to earn",
+    body: "Pick ETH, USDG, PONS, or an LP. Deposit. APY is variable with utilization.",
+    href: "/app",
   },
   {
     n: "03",
-    title: "Shapes and ranges",
-    body: "Concentrated, uniform, wide — why a tight band earns more until price walks out of it.",
-    href: "/docs",
+    title: "Collateral and borrow",
+    body: "Leave collateral on, then borrow another asset. Origination is 0.30%.",
+    href: "/app",
   },
   {
     n: "04",
-    title: "Reading the tables",
-    body: "Trending is heat. Established is size. Quote filters split ETH/USDG on Robinhood and SOL/USDC on Solana.",
-    href: "/pools",
+    title: "Health factor",
+    body: "Collateral × liquidation threshold ÷ borrows. Stay above 1.00. This UI blocks under 1.05.",
+    href: "/markets",
   },
   {
     n: "05",
-    title: "Fees without surprises",
-    body: "7.5% on claimed trading fees. Zero on deposit, withdraw, and stake creation. Gas is extra.",
-    href: "/docs",
+    title: "pons loop",
+    body: "Buy or launch on pons. Bring PONS or PONS/WETH LP back as collateral.",
+    href: "/markets/pons",
   },
   {
     n: "06",
-    title: "Your first mint",
-    body: `Connect, pick ${PROTOCOL.token}, choose a shape, mint. Then watch it on Positions. Nothing is locked.`,
-    href: "/positions",
+    title: "Your first book",
+    body: "Connect, supply a bag you already hold in the demo wallet, then draw USDG.",
+    href: "/app",
   },
 ];
 
@@ -60,11 +60,11 @@ export default function AcademyPage() {
             margin: "8px 0 12px",
           }}
         >
-          Hear the ping, then sit in the pool.
+          Supply, borrow, watch health.
         </h1>
         <p style={{ color: "var(--text-2)", maxWidth: "62ch", margin: 0, lineHeight: 1.65, fontSize: 16 }}>
-          {PROTOCOL.name} Academy is the short path from the meme to a live position. Full
-          English. No seed phrases. No lockups. Open a lesson, then do the action in the app.
+          Short path from the welcome slides to a live book on Robinhood Chain. Full English. Docs
+          have the Bangla summary. No seed phrases.
         </p>
       </div>
       <div className="lesson-grid">

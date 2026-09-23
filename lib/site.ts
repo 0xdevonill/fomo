@@ -17,7 +17,7 @@ export const site = {
   tokenInfo: env("NEXT_PUBLIC_TOKEN_INFO"),
   xUrl: env("NEXT_PUBLIC_X_URL", "https://x.com/fomoping"),
   discordUrl: env("NEXT_PUBLIC_DISCORD_URL", "https://discord.gg/fomoping"),
-  ponsUrl: env("NEXT_PUBLIC_PONS_URL"),
+  ponsUrl: env("NEXT_PUBLIC_PONS_URL", "https://www.ponsfamily.com/launchpad"),
   ponsId: env("NEXT_PUBLIC_PONS_ID"),
   launchAt: env("NEXT_PUBLIC_LAUNCH_AT"),
 };
@@ -56,8 +56,9 @@ export function isDemoContract(address: string): boolean {
 
 export function isSiteToken(symbol: string): boolean {
   const s = symbol.toUpperCase();
-  if (s === "PING" || s === "HELIX") return true;
-  if (site.tokenSymbol && s === site.tokenSymbol.toUpperCase()) return true;
+  const branded = (site.tokenSymbol || "PING").toUpperCase();
+  if (s === "PING" || s === "HELIX" || s === branded) return true;
+  if (s.startsWith("PING/") || s.startsWith(`${branded}/`)) return true;
   return false;
 }
 
