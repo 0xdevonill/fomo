@@ -68,3 +68,38 @@ export type StakeDeposit = {
   amountQuote: number;
   createdAt: number;
 };
+
+export type MarketKind = "asset" | "lp";
+export type MarketCategory = "core" | "stable" | "stock" | "meme" | "lp";
+export type LendAction = "supply" | "withdraw" | "borrow" | "repay";
+
+export type Market = {
+  id: string;
+  symbol: string;
+  name: string;
+  kind: MarketKind;
+  category: MarketCategory;
+  tokenId?: string;
+  address: string;
+  priceUsd: number;
+  supplyApy: number;
+  borrowApy: number;
+  totalSupplyUsd: number;
+  totalBorrowUsd: number;
+  ltv: number;
+  liqThreshold: number;
+  liqBonus: number;
+  originationFee: number;
+  canCollateral: boolean;
+  featured?: boolean;
+  ponsPair?: boolean;
+};
+
+export type LendBook = {
+  marketId: string;
+  supplied: number;
+  borrowed: number;
+  collateral: boolean;
+};
+
+export type LendBag = Record<string, number>;

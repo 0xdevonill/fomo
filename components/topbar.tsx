@@ -19,6 +19,7 @@ import { WalletButton } from "@/components/wallet-button";
 import { useAppState } from "@/lib/app-state";
 import { mergeSearchHits } from "@/lib/dex";
 import { formatUsd, shortAddr } from "@/lib/format";
+import { overlayMarkets, PONS_APP } from "@/lib/markets";
 import { PROTOCOL } from "@/lib/tokens";
 import { useCatalog } from "@/lib/catalog";
 import type { Token } from "@/lib/types";
@@ -33,8 +34,9 @@ export function Topbar() {
   const router = useRouter();
   const path = usePathname();
   const landing = path === "/";
-  const buyHref = PROTOCOL.ponsUrl || "/pools";
-  const buyExternal = Boolean(PROTOCOL.ponsUrl);
+  const lendMode = path.startsWith("/app") || path.startsWith("/markets");
+  const buyHref = PROTOCOL.ponsUrl || PONS_APP;
+  const buyExternal = true;
 
   const localHits = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -76,10 +78,26 @@ export function Topbar() {
   const hits =
     q.trim().length >= 2 ? mergeSearchHits(localHits, remote) : localHits.slice(0, 8);
 
+  const marketHits = useMemo(() => {
+    const query = q.trim().toLowerCase();
+    if (!query) return [];
+    return overlayMarkets(null).filter(
+      (m) =>
+        m.symbol.toLowerCase().includes(query) ||
+        m.name.toLowerCase().includes(query) ||
+        m.address.toLowerCase().includes(query)
+    );
+  }, [q]);
+
   const openToken = (t: Token) => {
     rememberToken(t);
     if (t.chain !== chain) setChain(t.chain);
     router.push(`/pools/${t.id}`);
+    setQ("");
+  };
+
+  const openMarket = (id: string) => {
+    router.push(`/markets/${id}`);
     setQ("");
   };
 
@@ -94,29 +112,52 @@ export function Topbar() {
             <Search size={14} />
             <input
               placeholder={
-                chain === "sol"
-                  ? "SEARCH SOLANA NAME OR MINT"
-                  : "SEARCH ROBINHOOD NAME OR CONTRACT"
+                lendMode
+                  ? "SEARCH ETH, PONS, USDG, LP"
+                  : chain === "sol"
+                    ? "SEARCH SOLANA NAME OR MINT"
+                    : "SEARCH ROBINHOOD NAME OR CONTRACT"
               }
               aria-label="Search tokens by name or contract"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && hits[0]) openToken(hits[0]);
+                if (e.key === "Enter") {
+                  if (lendMode && marketHits[0]) openMarket(marketHits[0].id);
+                  else if (hits[0]) openToken(hits[0]);
+                }
                 if (e.key === "Escape") setQ("");
               }}
             />
             {q.trim() ? (
               <div className="tok-search-drop">
-                {searching && hits.length === 0 ? (
+                {marketHits.length > 0 ? (
+                  <>
+                    <div className="tok-search-note">Lending markets</div>
+                    {marketHits.slice(0, 6).map((m) => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        className="tok-search-hit"
+                        onClick={() => openMarket(m.id)}
+                      >
+                        <TokenIcon symbol={m.symbol} size={18} />
+                        <span className="tok-sym">{m.symbol}</span>
+                        <span className="tok-name">{m.name}</span>
+                        <span className="tok-addr">{shortAddr(m.address)}</span>
+                      </button>
+                    ))}
+                  </>
+                ) : null}
+                {searching && hits.length === 0 && marketHits.length === 0 ? (
                   <div className="tok-search-note">
                     Searching {chain === "sol" ? "Solana" : "Robinhood Chain"}…
                   </div>
-                ) : hits.length === 0 ? (
+                ) : hits.length === 0 && marketHits.length === 0 ? (
                   <div className="tok-search-note">
                     No {chain === "sol" ? "Solana" : "Robinhood"} tokens match “{q.trim()}”.
                   </div>
-                ) : (
+                ) : hits.length > 0 ? (
                   hits.map((t) => (
                     <button
                       key={`${t.chain}-${t.address}`}
@@ -130,7 +171,7 @@ export function Topbar() {
                       <span className="tok-addr">{shortAddr(t.address)}</span>
                     </button>
                   ))
-                )}
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -162,19 +203,25 @@ export function Topbar() {
                   <span className="chain-lab">SOL</span>
                 </button>
               </nav>
-              <div className="header-stats" aria-label={`${PROTOCOL.name} pool totals`}>
+              <div className="header-stats" aria-label={`${PROTOCOL.name} totals`}>
                 <span className="hstat">
                   <Layers className="hstat-ico" size={13} strokeWidth={2.1} />
                   <span className="hstat-body">
-                    <span className="hstat-label">Total Positions</span>
-                    <span className="hstat-value">{totals.positions.toLocaleString("en-US")}</span>
+                    <span className="hstat-label">{lendMode ? "Supplied" : "Total Positions"}</span>
+                    <span className="hstat-value">
+                      {lendMode
+                        ? formatUsd(totals.supplied, 0)
+                        : totals.positions.toLocaleString("en-US")}
+                    </span>
                   </span>
                 </span>
                 <span className="hstat">
                   <Coins className="hstat-ico" size={13} strokeWidth={2.1} />
                   <span className="hstat-body">
-                    <span className="hstat-label">Total Fees</span>
-                    <span className="hstat-value">{formatUsd(totals.fees, 0)}</span>
+                    <span className="hstat-label">{lendMode ? "Borrowed" : "Total Fees"}</span>
+                    <span className="hstat-value">
+                      {lendMode ? formatUsd(totals.borrowed, 0) : formatUsd(totals.fees, 0)}
+                    </span>
                   </span>
                 </span>
                 <span className="hstat hstat-wide">
@@ -205,17 +252,17 @@ export function Topbar() {
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
-          {buyExternal ? (
-            <a className="btn btn-ping btn-sm" href={buyHref} target="_blank" rel="noopener noreferrer">
-              <span className="btn-full">Buy ${PROTOCOL.token}</span>
-              <span className="btn-short">Buy</span>
-            </a>
-          ) : (
-            <Link className="btn btn-ping btn-sm" href={landing ? "/pools" : "/"}>
-              <span className="btn-full">{landing ? "Enter app" : `$${PROTOCOL.token}`}</span>
-              <span className="btn-short">{landing ? "App" : `$${PROTOCOL.token}`}</span>
+          {landing ? (
+            <Link className="btn btn-ping btn-sm" href="/app">
+              <span className="btn-full">Enter app</span>
+              <span className="btn-short">App</span>
             </Link>
-          )}
+          ) : buyExternal ? (
+            <a className="btn btn-ping btn-sm" href={buyHref} target="_blank" rel="noopener noreferrer">
+              <span className="btn-full">Buy on pons</span>
+              <span className="btn-short">pons</span>
+            </a>
+          ) : null}
           <WalletButton />
         </div>
       </div>

@@ -192,7 +192,7 @@ export const PROTOCOL = {
   token: site.tokenSymbol || "PING",
   tagline:
     site.tokenInfo ||
-    "You heard it. That's the entry. Fair-launch meme on Robinhood Chain with real fee-sharing pools — not an official Robinhood product.",
+    "The lending protocol on Robinhood Chain. Supply, borrow, and route through pons — not an official Robinhood product.",
   claimFee: 0.075,
   chainIdRh: 4663,
   x: site.xUrl,
@@ -202,8 +202,24 @@ export const PROTOCOL = {
   launchAt: site.launchAt,
   tokenInfo: site.tokenInfo,
   totals: {
-    robinhood: { positions: 21441, fees: 3_201_988, tvl: 768_258, nativePrice: 2440.95, nativeLabel: "ETH Price" },
-    sol: { positions: 18620, fees: 2_448_110, tvl: 1_124_400, nativePrice: 214.62, nativeLabel: "SOL Price" },
+    robinhood: {
+      positions: 21441,
+      fees: 3_201_988,
+      tvl: 24_180_000,
+      nativePrice: 2440.95,
+      nativeLabel: "ETH Price",
+      supplied: 31_400_000,
+      borrowed: 12_620_000,
+    },
+    sol: {
+      positions: 18620,
+      fees: 2_448_110,
+      tvl: 1_124_400,
+      nativePrice: 214.62,
+      nativeLabel: "SOL Price",
+      supplied: 1_124_400,
+      borrowed: 412_000,
+    },
   },
 };
 

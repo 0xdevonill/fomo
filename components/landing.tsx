@@ -1,225 +1,105 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Radio, Layers, Zap, ShieldAlert, Bell, Waves } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { PONS_APP } from "@/lib/markets";
 import { PROTOCOL } from "@/lib/tokens";
 
-const TAPE = [
-  `$${PROTOCOL.token}`,
-  "YOU HEARD IT",
-  "ROBINHOOD CHAIN",
-  "NOT OFFICIAL",
-  "FAIR LAUNCH ON PONS",
-  "REAL LP FEES",
-  "THE PING IS THE ENTRY",
-  `$${PROTOCOL.token}`,
+const SLIDES = [
+  {
+    kicker: "Robinhood Chain",
+    title: (
+      <>
+        Welcome to <span>PING</span>
+      </>
+    ),
+    body: `${PROTOCOL.name} is the lending protocol on Robinhood Chain. Supply, borrow, and keep a health factor — the same loop as EVAA on TON, built here for ETH gas and pons liquidity.`,
+  },
+  {
+    kicker: "Markets",
+    title: (
+      <>
+        ETH, stables, <span>PONS</span>
+      </>
+    ),
+    body: "Earn supply APY and borrow ETH, USDG, USDe, stock tokens, memecoins, and pons LP. Utilization sets the rate. Collateral is optional until you borrow.",
+  },
+  {
+    kicker: "Capital",
+    title: (
+      <>
+        Increase your <span>capital</span>
+      </>
+    ),
+    body: "Supply once. Borrow against it. Loop pons LP or PING if you want leverage. Origination is 0.30%. Liquidation starts if health falls under 1.00.",
+  },
+  {
+    kicker: "pons",
+    title: (
+      <>
+        Matched with <span>pons</span>
+      </>
+    ),
+    body: "Launch and trade on pons. Bring PONS or a PONS/WETH LP in as collateral. Buy the site token on the launchpad, then supply it here. pons is not Robinhood. Neither are we.",
+  },
 ];
 
-function pad(n: number) {
-  return String(Math.max(0, n)).padStart(2, "0");
-}
-
-function Countdown({ at }: { at: string }) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const target = Date.parse(at);
-  if (!Number.isFinite(target)) return null;
-  const left = target - now;
-  if (left <= 0) {
-    return (
-      <div className="ping-count ping-count--live" role="status">
-        <span className="ping-dot" /> LIVE ON PONS
-      </div>
-    );
-  }
-  const s = Math.floor(left / 1000);
-  const d = Math.floor(s / 86400);
-  const h = Math.floor((s % 86400) / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = s % 60;
-  return (
-    <div className="ping-count" aria-label="Time until launch">
-      <span>
-        <b>{pad(d)}</b>
-        <i>days</i>
-      </span>
-      <span>
-        <b>{pad(h)}</b>
-        <i>hrs</i>
-      </span>
-      <span>
-        <b>{pad(m)}</b>
-        <i>min</i>
-      </span>
-      <span>
-        <b>{pad(sec)}</b>
-        <i>sec</i>
-      </span>
-    </div>
-  );
-}
-
 export function Landing() {
-  const buyHref = PROTOCOL.ponsUrl || "/pools";
-  const buyExternal = Boolean(PROTOCOL.ponsUrl);
-  const buyLabel = PROTOCOL.ponsUrl
-    ? `Buy $${PROTOCOL.token} on Pons`
-    : `Open the $${PROTOCOL.token} pool`;
+  const [i, setI] = useState(0);
+  const slide = SLIDES[i];
+  const last = i === SLIDES.length - 1;
+  const buyHref = PROTOCOL.ponsUrl || PONS_APP;
 
   return (
-    <div className="landing">
-      <div className="ping-tape" aria-hidden>
-        <div className="ping-tape-track">
-          {[...TAPE, ...TAPE, ...TAPE].map((t, i) => (
-            <span key={`${t}-${i}`}>
-              {t}
-              <em>·</em>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <section className="ping-hero">
-        <div className="ping-radar" aria-hidden>
+    <div className="welcome">
+      <div className="welcome-stage">
+        <div className="welcome-orb" aria-hidden>
           <span className="ring r1" />
           <span className="ring r2" />
           <span className="ring r3" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="ping-core" src="/logo.png" alt="" width={160} height={160} />
+          <img className="welcome-core" src="/logo.png" alt="" width={140} height={140} />
         </div>
-        <p className="ping-kicker">
-          <Bell size={13} /> Robinhood Chain · community meme
-        </p>
-        <h1 className="ping-word">
-          FOMO
-          <span>PING</span>
-        </h1>
-        <p className="ping-ticker">${PROTOCOL.token}</p>
-        <p className="ping-tag">{PROTOCOL.tagline}</p>
-        {PROTOCOL.launchAt ? <Countdown at={PROTOCOL.launchAt} /> : null}
-        <div className="ping-cta">
-          {buyExternal ? (
-            <a className="btn btn-ping" href={buyHref} target="_blank" rel="noopener noreferrer">
-              {buyLabel}
-            </a>
-          ) : (
-            <Link className="btn btn-ping" href={buyHref}>
-              {buyLabel}
+        <p className="welcome-kicker">{slide.kicker}</p>
+        <h1 className="welcome-title">{slide.title}</h1>
+        <p className="welcome-body">{slide.body}</p>
+        <div className="welcome-cta">
+          {last ? (
+            <Link className="btn btn-ping" href="/app">
+              Enter the app <ArrowRight size={14} />
             </Link>
+          ) : (
+            <button type="button" className="btn btn-ping" onClick={() => setI((n) => n + 1)}>
+              Next <ArrowRight size={14} />
+            </button>
           )}
-          <Link className="btn btn-ghost" href="/docs">
-            Full work plan
+          <Link className="btn btn-ghost" href="/app">
+            Skip to the App
           </Link>
         </div>
-        <p className="ping-note">{BRAND.disclaimer}</p>
-      </section>
-
-      <section className="ping-grid">
-        <article className="ping-card">
-          <Radio className="ping-ico" size={18} />
-          <h2>The unique idea</h2>
-          <p>
-            Robinhood Chain has no official network token. Every viral bag on this
-            chain starts the same way: a notification, a group chat, a ping. $
-            {PROTOCOL.token} is that sound — the FOMO alert, not a fake “official”
-            coin.
-          </p>
-        </article>
-        <article className="ping-card">
-          <Layers className="ping-ico" size={18} />
-          <h2>Real utility</h2>
-          <p>
-            Most Pons launches are a picture. This one pays the people who sit in
-            the pool. When someone FOMO-buys, the swap fee streams to stakers and
-            LPs. 92.5% to you. 7.5% protocol cut on claimed fees only.
-          </p>
-        </article>
-        <article className="ping-card">
-          <Zap className="ping-ico" size={18} />
-          <h2>Presentation</h2>
-          <p>
-            One ticker. One color. One motion: the ping. Site first, then Pons.
-            Contract address pasted in, live price from DexScreener. No seed
-            phrases. No “we are getting listed” theater.
-          </p>
-        </article>
-      </section>
-
-      <section className="ping-loop">
-        <h2>How FOMO pays the pool</h2>
-        <ol>
-          <li>
-            <b>01 · Someone hears it</b>
-            <span>A trader market-buys ${PROTOCOL.token} on Robinhood Chain.</span>
-          </li>
-          <li>
-            <b>02 · The pool pings</b>
-            <span>The swap takes a fee. Volume is the product, not a promise.</span>
-          </li>
-          <li>
-            <b>03 · You get paid</b>
-            <span>
-              Stakers split 92.5% of that fee over 7 days. No lockup. No minting
-              rewards out of thin air.
-            </span>
-          </li>
-        </ol>
-        <div className="ping-cta">
-          <Link className="btn btn-soft" href="/stakes">
-            Open stakes
-          </Link>
-          <Link className="btn btn-ghost" href="/pools">
-            Browse pools
-          </Link>
+        <div className="welcome-dots" role="tablist" aria-label="Welcome slides">
+          {SLIDES.map((_, n) => (
+            <button
+              key={n}
+              type="button"
+              role="tab"
+              aria-selected={n === i}
+              className={n === i ? "on" : ""}
+              onClick={() => setI(n)}
+            />
+          ))}
         </div>
-      </section>
-
-      <section className="ping-map">
-        <h2>Work map</h2>
-        <div className="ping-phases">
-          <div>
-            <span>00</span>
-            <h3>Brand live</h3>
-            <p>Name, mark, palette, this site.</p>
-          </div>
-          <div>
-            <span>01</span>
-            <h3>Fair launch</h3>
-            <p>Create on Pons with this artwork. Paste the contract. Redeploy.</p>
-          </div>
-          <div>
-            <span>02</span>
-            <h3>Liquidity</h3>
-            <p>Seed the ${PROTOCOL.token} pool. Point stakers at fee share.</p>
-          </div>
-          <div>
-            <span>03</span>
-            <h3>Stay loud, stay honest</h3>
-            <p>Memes + utility clips. Never fake a Robinhood listing.</p>
-          </div>
+        <div className="welcome-links">
+          <a href={buyHref} target="_blank" rel="noopener noreferrer">
+            Buy ${PROTOCOL.token} on pons
+          </a>
+          <Link href="/markets">Markets</Link>
+          <Link href="/docs">Docs</Link>
         </div>
-        <Link className="btn btn-ghost" href="/docs">
-          Read the written plan
-        </Link>
-      </section>
-
-      <section className="ping-warn">
-        <ShieldAlert size={18} />
-        <div>
-          <h2>What this is not</h2>
-          <p>
-            Not a Robinhood airdrop. Not HOOD stock. Not a guaranteed listing in
-            the Robinhood app. ETH pays gas on chain id 4663. If anyone DMs you
-            a seed phrase box, it is not us.
-          </p>
-        </div>
-        <Waves size={18} className="ping-warn-end" />
-      </section>
+        <p className="welcome-note">{BRAND.disclaimer}</p>
+      </div>
     </div>
   );
 }

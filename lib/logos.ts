@@ -1,6 +1,12 @@
 import { BRAND_LOGO, isSiteToken, site } from "@/lib/site";
 
 const RH_LOGOS: Record<string, string> = {
+  ETH: "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png",
+  WETH: "https://coin-images.coingecko.com/coins/images/2518/large/weth.png",
+  USDG: "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png",
+  "PONS/WETH": "https://coin-images.coingecko.com/coins/images/102174571/large/jhitvkisdq8fhxvimdkpcw7y3dx5.",
+  "PONS/USDG": "https://coin-images.coingecko.com/coins/images/102174571/large/jhitvkisdq8fhxvimdkpcw7y3dx5.",
+  "PING/WETH": "",
   SPCX: "https://coin-images.coingecko.com/coins/images/102174129/large/0x4a0e65a3eccec6dbe60ae065f2e7bb85fae35eea.png",
   PONS: "https://coin-images.coingecko.com/coins/images/102174571/large/jhitvkisdq8fhxvimdkpcw7y3dx5.",
   NVDA: "https://coin-images.coingecko.com/coins/images/102174110/large/0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec.png",

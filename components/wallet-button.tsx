@@ -198,7 +198,7 @@ export function WalletButton() {
           </div>
           <p className="wallet-note">
             {live
-              ? "Live mode: connects to Robinhood Chain mainnet (chain id 4663). Positions and stakes in this demo stay in the browser."
+              ? "Live mode: connects to Robinhood Chain mainnet (chain id 4663). Supply, borrow, and pool mints in this demo stay in the browser."
               : chain === "sol"
                 ? "Solana connect is a local demo. Switch to Robinhood for a live EVM wallet connection."
                 : "Demo mode until a WalletConnect Project ID is set."}

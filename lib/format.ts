@@ -21,8 +21,26 @@ export function sparkline(seed: string, n = 24): number[] {
 }
 
 export function tokenHue(symbol: string): number {
-  if (symbol === "PING" || symbol === "HELIX") return 145;
+  if (symbol === "PING" || symbol === "HELIX" || symbol.startsWith("PING/")) return 145;
+  if (symbol === "PONS" || symbol.startsWith("PONS/")) return 168;
+  if (symbol === "ETH" || symbol === "WETH") return 248;
   return hashSeed(symbol) % 360;
+}
+
+export function formatAmt(n: number, digits = 4): string {
+  if (!Number.isFinite(n) || n === 0) return "0";
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(2)}M`;
+  if (abs >= 1_000) return `${sign}${abs.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+  if (abs >= 1) return `${sign}${abs.toLocaleString("en-US", { maximumFractionDigits: Math.min(digits, 4) })}`;
+  if (abs >= 0.0001) return `${sign}${abs.toFixed(Math.min(6, digits + 2))}`;
+  return `${sign}${abs.toPrecision(3)}`;
+}
+
+export function formatApy(n: number): string {
+  if (!Number.isFinite(n)) return "—";
+  return `${n.toFixed(n >= 10 ? 1 : 2)}%`;
 }
 
 export function formatUsd(n: number | null, digits = 2): string {
